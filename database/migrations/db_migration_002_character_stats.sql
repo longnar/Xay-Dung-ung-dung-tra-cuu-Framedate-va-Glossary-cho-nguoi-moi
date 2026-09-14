@@ -1,0 +1,37 @@
+-- Run this migration against an existing idol_showdown_wiki database.
+USE idol_showdown_wiki;
+
+CREATE TABLE IF NOT EXISTS character_moves (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    character_id INT NOT NULL,
+    CHAR_NAME VARCHAR(100) NOT NULL,
+    CHAR_MOVE VARCHAR(150) NOT NULL,
+    DAMAGE INT,
+    START_UP INT,
+    ACTIVE INT,
+    RECOVERY INT,
+    ADV_ON_BLOCK INT,
+    ADV_ON_HIT INT,
+    INVULNERABILITY VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_character_moves_character
+        FOREIGN KEY (character_id) REFERENCES characters(id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS character_base_stats (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    character_id INT NOT NULL UNIQUE,
+    HP INT,
+    WALKSPEED INT,
+    JUMP_START_UP INT,
+    DASH_START_UP INT,
+    BACKDASH INT,
+    REVERSAL VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_character_base_stats_character
+        FOREIGN KEY (character_id) REFERENCES characters(id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
