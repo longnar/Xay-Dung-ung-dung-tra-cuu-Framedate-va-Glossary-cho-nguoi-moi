@@ -1,140 +1,129 @@
-1) Phân tích các đối tượng
-1. User / Admin
-Đây là đối tượng người dùng hệ thống.
+# Idol Showdown Wiki
 
-Có thể là:
-User thường: xem thông tin
-Admin: quản trị dữ liệu
-Thuộc tính quan trọng:
-username
-password
-role (admin / user)
-token/session
-Vai trò của Admin rất quan trọng vì họ mới có quyền:
+## Project layout
 
-thêm nhân vật
-sửa nhân vật
-xóa nhân vật
-thêm glossary
-sửa glossary
-xóa glossary
-2. Character (Nhân vật)
-Đây là đối tượng trung tâm của hệ thống.
+- `server/`: Express application factory.
+- `controllers/`, `routes/`, `middleware/`, `config/`: backend feature modules.
+- `src/`: React frontend. `src/api/` contains shared HTTP access.
+- `database/schema/`: initial database schema.
+- `database/migrations/`: incremental migrations.
+- `database/migrate.js`: migration runner.
+- `docs/`: deployment and product documentation.
+- `public/`: files served directly by Vite/Express.
+- `uploads/`: runtime-uploaded files; contents are not committed.
 
-Thuộc tính cơ bản:
+## Run with Dev Container (Recommended for Team)
 
-id
-name
-debut_date
-description
-difficulty
-type
-image
-Có thể hiểu Character là “bản hồ sơ nhân vật game” được hiển thị trên wiki.
+1. Cài đặt **Docker Desktop** và tiện ích mở rộng **Dev Containers** (`ms-vscode-remote.remote-containers`) trên VS Code / Cursor.
+2. Mở thư mục dự án trong VS Code, nhấn `F1` (hoặc `Ctrl+Shift+P`), chọn **Dev Containers: Reopen in Container**.
+3. Hệ thống sẽ tự động build container, cài đặt dependencies (`npm install`), tự động kết nối MySQL container (`DB_HOST=mysql`) và chạy DB migrations (`npm run db:migrate`).
+4. Mở Terminal trong Dev Container để khởi chạy dự án:
 
-3. Move (Chiêu thức / kỹ năng của nhân vật)
-Mỗi nhân vật có thể có nhiều move.
+```bash
+# Khởi chạy cả Frontend và Backend API đồng thời:
+npm run dev
 
-Thuộc tính ví dụ:
+# Hoặc chạy riêng từng terminal:
+# Terminal 1 (Frontend): npm run dev:client
+# Terminal 2 (Backend):  npm run dev:server
+```
 
-id
-character_id
-name
-description
-damage / effect / type (nếu cần mở rộng)
-Quan hệ của move là phụ thuộc hoàn toàn vào Character.
+- Giao diện Frontend: `http://localhost:3000`
+- API Backend: `http://localhost:5000`
+- Kiểm tra kết nối DB: `http://localhost:5000/health/db`
 
-4. BaseStat (Chỉ số cơ bản)
-Mỗi nhân vật có thể có chỉ số nền.
+## Run locally (Host Machine)
 
-Ví dụ:
+```powershell
+npm install
+npm run db:up
+npm run db:migrate
+npm run dev
+```
 
-hp
-attack
-defense
-speed
-energy
-Đây là dữ liệu thống kê thuộc về nhân vật, thường là 1 bản ghi cho mỗi nhân vật.
+Hoặc chạy riêng từng terminal:
 
-5. Glossary / Terms (Thuật ngữ)
-Đây là danh sách thuật ngữ được người chơi tra cứu.
+```powershell
+npm run dev:client
+npm run dev:server
+```
 
-Thuộc tính:
+Production build and server:
 
-id
-term
-definition
-level (basic, intermediate, advanced...)
-video_url
-image
-Glossary thường là dữ liệu wiki/tra cứu, không gắn trực tiếp với nhân vật nhưng có thể liên quan đến nội dung game.
+```powershell
+npm run build
+npm run start:server
+```
 
-6. Image / Uploaded File
-Đây là đối tượng phụ, dùng để lưu hình ảnh upload.
+The API is available at `http://localhost:5000`; the database check is
+`http://localhost:5000/health/db`.
 
-Ví dụ:
+## Structure rules
 
-avatar nhân vật
-ảnh glossary
-ảnh minh họa
-Thông thường đối tượng này không được lưu kiểu thuần “bản ghi nghiệp vụ” mà là file trong thư mục upload hoặc URL lưu trong database.
+Keep API contracts stable while reorganizing internal files. UI dimension and
+position values in `src/App.css` and `src/index.css` must not be changed during
+structural refactors.
 
-2) Phân tích mối quan hệ các đối tượng
-a) User - Admin
-User có thể đăng nhập
-Admin là loại User đặc biệt
-Quan hệ: one-to-one hoặc inheritance-like
-Admin được cấp quyền thao tác CRUD
-b) Character - Move
-Một Character có nhiều Move
-Một Move thuộc về duy nhất một Character
-Quan hệ: 1-n
+## Phân tích bài toán
 
-Ví dụ:
+### 1) Phân tích các đối tượng
 
-Character A có Move 1, Move 2, Move 3
-Move 1 chỉ thuộc về Character A
-c) Character - BaseStat
-Một Character có một bộ BaseStat
-Một BaseStat thuộc về một Character
-Quan hệ: 1-1 hoặc 1-n nếu có nhiều phiên bản số liệu theo thời gian
+#### User / Admin
 
-Trong mô hình đơn giản, thường là:
+- Là người dùng của hệ thống.
+- Có thể là người xem thông tin hoặc người quản trị.
+- Admin có quyền thực hiện CRUD với dữ liệu quan trọng như nhân vật và glossary.
+- Các thuộc tính quan trọng gồm: username, password_hash, role, created_at, updated_at.
 
-1 Character: 1 BaseStat
-d) Character - Image
-Một Character có thể có 1 ảnh đại diện
-Một ảnh có thể dùng cho nhiều Character nếu tái sử dụng
-Nhưng trong mô hình thực tế, thường là:
-1 Character: 1 image
-e) Glossary - Image
-Một glossary term có thể có 1 ảnh minh họa
-1 ảnh có thể được dùng chung cho nhiều glossary
-Tùy thiết kế, có thể là 1-n hoặc n-1
-f) User - Character / Glossary
-Admin quản lý Character và Glossary
-User thường chỉ xem
-Quan hệ quyền: Admin thực hiện CRUD, User chỉ đọc
-3) Mô hình quan hệ tổng quát
-Có thể mô tả ngắn gọn như sau:
+#### Character (Nhân vật)
 
-User (Admin) -> tạo/sửa/xóa Character
-User (Admin) -> tạo/sửa/xóa Glossary
-Character -> có nhiều Move
-Character -> có một BaseStat
-Character -> có một Image
-Glossary -> có một Image
-4) Kết luận
-Đối tượng cốt lõi của bài toán là:
+- Là đối tượng trung tâm của hệ thống.
+- Mỗi nhân vật có thông tin như tên, ngày debut, mô tả, độ khó, loại nhân vật và ảnh đại diện.
+- Đây là dữ liệu chính được hiển thị trên wiki/game.
 
-User/Admin
-Character
-Move
-BaseStat
-Glossary
-Và các mối quan hệ chính là:
+#### Move (Chiêu thức / kỹ năng)
 
-User/Admin kiểm soát dữ liệu
-Character là trung tâm
-Move và BaseStat phụ thuộc vào Character
-Glossary là dữ liệu tham khảo độc lập nhưng cùng nằm trong hệ thống wiki
+- Mỗi nhân vật có thể có nhiều move.
+- Move thuộc về một nhân vật cụ thể và phản ánh kỹ năng/đòn đánh trong game.
+
+#### BaseStat (Chỉ số cơ bản)
+
+- Là bộ chỉ số nền của nhân vật.
+- Thường bao gồm hp, speed, dash, jump, defense, vv.
+- Mỗi nhân vật có thể có một bản ghi chỉ số cơ bản riêng.
+
+#### Glossary (Thuật ngữ)
+
+- Là kho từ vựng/thuật ngữ của game để người chơi tra cứu.
+- Có thể có định nghĩa, mức độ, ảnh minh họa và liên kết video.
+- Dùng cho mục đích wiki và hướng dẫn người chơi.
+
+#### Uploaded Image
+
+- Là đối tượng phụ dùng để lưu hình ảnh nhân vật và glossary.
+- File hình ảnh thường được lưu trong thư mục uploads và tham chiếu từ database bằng URL.
+
+### 2) Phân tích mối quan hệ giữa các đối tượng
+
+- User/Admin quản lý dữ liệu: Admin có quyền thêm, sửa, xóa Character và Glossary.
+- One-to-many: Một Character có nhiều Move.
+- One-to-one: Một Character có một bộ BaseStat.
+- One-to-many: Một Character có thể có một ảnh đại diện.
+- One-to-many: Một Glossary có thể có một ảnh minh họa hoặc video hướng dẫn.
+- User thường chỉ xem thông tin; Admin là người cập nhật dữ liệu.
+
+### 3) Tóm tắt kiến trúc nghiệp vụ
+
+Hệ thống đang xây dựng là một wiki game/kho dữ liệu nhân vật và glossary, trong đó:
+
+- Frontend hiển thị thông tin cho người dùng.
+- Backend API quản lý dữ liệu và xác thực quyền truy cập.
+- MySQL lưu trữ dữ liệu chính.
+- Upload file xử lý hình ảnh minh họa cho nhân vật và glossary.
+
+## File quan trọng của hệ thống
+
+- `config/database.js` → File kết nối MySQL chính
+- `database/schema/001_initial_schema.sql` → Cấu trúc CSDL ban đầu
+
+Đây là hai file nền tảng quan trọng để hiểu cấu trúc dữ liệu và kết nối hệ thống.

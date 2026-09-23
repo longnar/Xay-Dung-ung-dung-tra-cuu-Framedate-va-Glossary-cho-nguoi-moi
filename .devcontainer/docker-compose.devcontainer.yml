@@ -1,0 +1,22 @@
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/javascript-node:1-20-bullseye
+    volumes:
+      - ..:/workspace:cached
+    environment:
+      - PORT=5000
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=idol_root_password
+      - DB_NAME=idol_showdown_wiki
+      - DB_PORT=3306
+      - JWT_SECRET=idolshowdownwikiprojectsecretkey
+      - JWT_EXPIRES_IN=24h
+    command: sleep infinity
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    ports:
+      - "3306:3306"
