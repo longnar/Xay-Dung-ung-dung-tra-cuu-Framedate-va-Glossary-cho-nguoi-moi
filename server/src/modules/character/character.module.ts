@@ -1,0 +1,15 @@
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Character } from '../../entities/character.entity';
+import { CharacterMove } from '../../entities/character-move.entity';
+import { CharacterBaseStat } from '../../entities/character-base-stat.entity';
+import { CharacterService } from './character.service';
+import { CharacterController } from './character.controller';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Character, CharacterMove, CharacterBaseStat])],
+  controllers: [CharacterController],
+  providers: [CharacterService],
+  exports: [CharacterService],
+})
+export class CharacterModule {}
