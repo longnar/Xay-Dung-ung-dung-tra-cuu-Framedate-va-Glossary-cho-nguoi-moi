@@ -16,7 +16,7 @@ function createApp() {
     app.use(express.urlencoded({ extended: true }));
     app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
-    app.get('/', (req, res) => {
+    app.get('/api', (req, res) => {
         res.status(200).json({
             name: 'Idol Showdown Wiki Backend API',
             version: '1.0.0',
