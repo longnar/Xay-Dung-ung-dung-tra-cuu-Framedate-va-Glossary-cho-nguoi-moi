@@ -6,7 +6,11 @@ Database files are grouped under `database/`:
 - `migrations/`: incremental changes for an existing database.
 - `migrate.js`: idempotent migration runner using `schema_migrations`.
 
-Run locally:
+Run inside Dev Container (Automated):
+- Dev Container tự động khởi tạo MySQL container và chạy `npm run db:migrate` khi khởi tạo environment.
+- Kiểm tra trạng thái kết nối DB: `http://localhost:5000/health/db`
+
+Run locally (Host Machine):
 
 ```powershell
 npm run db:up

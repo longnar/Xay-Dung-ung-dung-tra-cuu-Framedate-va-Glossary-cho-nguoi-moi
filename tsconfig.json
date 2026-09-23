@@ -23,5 +23,5 @@
     "allowJs": true,
     "esModuleInterop": true
   },
-  "include": ["src", "main", "select", "infor", "golosary"]
+  "include": ["src"]
 }
