@@ -5,10 +5,10 @@ require('dotenv').config();
 const useSsl = process.env.DB_SSL === 'true';
 const ssl = useSsl
     ? {
-        ca: process.env.DB_CA_PATH
+        ca: (process.env.DB_CA_PATH && fs.existsSync(process.env.DB_CA_PATH))
             ? fs.readFileSync(process.env.DB_CA_PATH, 'utf8')
             : undefined,
-        rejectUnauthorized: true
+        rejectUnauthorized: false
     }
     : undefined;
 
