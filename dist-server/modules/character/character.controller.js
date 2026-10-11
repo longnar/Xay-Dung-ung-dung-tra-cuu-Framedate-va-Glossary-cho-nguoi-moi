@@ -58,7 +58,7 @@ const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const roles_decorator_1 = require("../auth/roles.decorator");
 const multerOptions = {
     storage: (0, multer_1.diskStorage)({
-        destination: path.join(__dirname, '../../../../uploads'),
+        destination: path.join(process.cwd(), 'uploads'),
         filename: (req, file, cb) => {
             const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
             const ext = path.extname(file.originalname);

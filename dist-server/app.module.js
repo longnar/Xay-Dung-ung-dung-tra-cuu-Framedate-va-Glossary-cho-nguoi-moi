@@ -88,11 +88,11 @@ exports.AppModule = AppModule = __decorate([
                 },
             }),
             serve_static_1.ServeStaticModule.forRoot({
-                rootPath: path.join(__dirname, '../../uploads'),
+                rootPath: path.join(process.cwd(), 'uploads'),
                 serveRoot: '/uploads',
             }),
             serve_static_1.ServeStaticModule.forRoot({
-                rootPath: path.join(__dirname, '../../dist'),
+                rootPath: path.join(process.cwd(), 'dist'),
                 exclude: ['/api/(.*)', '/health/(.*)'],
             }),
             auth_module_1.AuthModule,

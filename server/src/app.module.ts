@@ -45,11 +45,11 @@ import { AppController } from './app.controller';
       },
     }),
     ServeStaticModule.forRoot({
-      rootPath: path.join(__dirname, '../../uploads'),
+      rootPath: path.join(process.cwd(), 'uploads'),
       serveRoot: '/uploads',
     }),
     ServeStaticModule.forRoot({
-      rootPath: path.join(__dirname, '../../dist'),
+      rootPath: path.join(process.cwd(), 'dist'),
       exclude: ['/api/(.*)', '/health/(.*)'],
     }),
     AuthModule,

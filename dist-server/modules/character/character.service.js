@@ -64,7 +64,7 @@ let CharacterService = class CharacterService {
         if (!relativeUrl)
             return;
         const filename = relativeUrl.replace(/^\/uploads\//, '');
-        const filepath = path.join(__dirname, '../../../../uploads', filename);
+        const filepath = path.join(process.cwd(), 'uploads', filename);
         fs.unlink(filepath, (err) => {
             if (err)
                 console.warn(`[Warning] Could not delete file: ${filepath}`, err.message);
