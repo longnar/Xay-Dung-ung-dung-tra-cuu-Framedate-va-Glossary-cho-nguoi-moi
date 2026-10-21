@@ -1,0 +1,1446 @@
+/* =========================================================
+   FIGMA DETAIL CONTAINER - PHONG CÁCH SÁNG TRONG SUỐT (FLAT GLASSMORPHISM)
+   Kích thước mở rộng: min(1820px, 98vw) x min(920px, 94vh) (~1.5x - 2x quy mô)
+   Đặc điểm:
+   - Không dùng hiệu ứng 3D (loại bỏ 3D transform, perspective, shadow đa lớp)
+   - Phần nền KHÔNG hạ thấp độ sáng (nền kính trong suốt luminous, giữ độ sáng rực rỡ của bầu trời game)
+   - Bố cục thoáng đãng, các khối thông số to rõ ràng
+   ========================================================= */
+
+.figma-detail-screen {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  box-sizing: border-box;
+  background: transparent;
+  font-family: inherit;
+  color: #ffffff;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* Nút Back quay lại màn hình Showcase - Flat Glassmorphism */
+.figma-detail-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  border-radius: 9999px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  z-index: 20;
+}
+
+.figma-detail-back-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+  border-color: #ffffff;
+  color: #38bdf8;
+}
+
+/* =========================================================
+   KHUNG TỔNG THỂ FIGMA DETAIL CONTAINER (MỞ RỘNG 1.5x - 2x)
+   Không hạ thấp độ sáng nền, dùng kính mờ trong trẻo
+   ========================================================= */
+.figma-detail-container {
+  width: min(1820px, 98vw);
+  height: min(920px, 94vh);
+  background: rgba(20, 60, 92, 0.42);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 36px;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  padding: 26px 34px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header thông tin nhân vật */
+.figma-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+  flex-shrink: 0;
+}
+
+.figma-detail-header-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.figma-detail-char-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.figma-detail-char-name {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.figma-detail-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: #e2e8f0;
+  margin-top: 2px;
+}
+
+.figma-detail-header-meta strong {
+  color: #7dd3fc;
+}
+
+.figma-detail-badge {
+  padding: 8px 18px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+/* Layout 2 cột chính */
+.figma-detail-main-layout {
+  display: flex;
+  gap: 22px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* =========================================================
+   CỘT TRÁI: COMBAT PROFILE & BASE STATS (FIGMA NODE 466:1052)
+   Nền kính ngọc lam trong suốt, không làm tối nền trời
+   ========================================================= */
+
+.figma-detail-stats-panel.figma-teal-card {
+  width: clamp(340px, 25%, 400px);
+  height: 100%;
+  max-height: 100%;
+  background: rgba(30, 92, 102, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 28px;
+  border: 1.5px solid rgba(94, 234, 212, 0.45);
+  padding: 18px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex-shrink: 0;
+  overflow-x: hidden !important;
+  overflow-y: auto;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(94, 234, 212, 0.4) transparent;
+}
+
+.figma-detail-stats-panel.figma-teal-card::-webkit-scrollbar {
+  width: 5px;
+  height: 0px;
+}
+
+.figma-detail-stats-panel.figma-teal-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.figma-detail-stats-panel.figma-teal-card::-webkit-scrollbar-thumb {
+  background: rgba(94, 234, 212, 0.35);
+  border-radius: 9999px;
+}
+
+.figma-detail-stats-panel.figma-teal-card::-webkit-scrollbar-horizontal {
+  display: none !important;
+  height: 0px !important;
+}
+
+/* Đảm bảo toàn bộ thành phần con không bao giờ tràn ngang */
+.figma-detail-stats-panel.figma-teal-card * {
+  box-sizing: border-box;
+}
+
+/* Họa tiết đa giác chìm ở góc nằm gọn gàng bên trong, không kích hoạt thanh cuộn */
+.figma-teal-polygon-decor {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 130px;
+  height: 130px;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* Banner chân dung nhân vật lớn */
+.figma-teal-portrait-box {
+  width: 100%;
+  height: 200px;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background: rgba(15, 35, 55, 0.5);
+  flex-shrink: 0;
+}
+
+.figma-teal-portrait-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.figma-teal-portrait-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(10, 30, 50, 0.85) 95%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 12px 16px;
+  box-sizing: border-box;
+}
+
+.figma-teal-tag-arch {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #5eead4;
+  text-transform: uppercase;
+}
+
+.figma-teal-char-title {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+}
+
+.figma-detail-stats-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(94, 234, 212, 0.25);
+}
+
+.figma-detail-section-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #ccfbf1;
+}
+
+.figma-detail-btn-small {
+  padding: 5px 14px;
+  border-radius: 8px;
+  background: rgba(94, 234, 212, 0.2);
+  border: 1px solid rgba(94, 234, 212, 0.5);
+  color: #ccfbf1;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.figma-detail-btn-small:hover {
+  background: rgba(94, 234, 212, 0.4);
+  color: #ffffff;
+}
+
+/* =========================================================
+   CẤU TRÚC Ô STATS CHUẨN MIZUUMI WIKI
+   ========================================================= */
+
+.figma-wiki-stats-box {
+  width: 100%;
+  background: rgba(14, 45, 68, 0.55);
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.figma-wiki-stats-header {
+  background: rgba(22, 62, 96, 0.85);
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #7dd3fc;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.figma-wiki-stats-body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.figma-wiki-stat-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.figma-wiki-stat-label {
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.figma-wiki-stat-value {
+  font-weight: 600;
+  color: #cbd5e1;
+  text-align: right;
+}
+
+.figma-wiki-stat-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.figma-wiki-stat-subnote {
+  font-size: 11px;
+  color: #93c5fd;
+  line-height: 1.35;
+  padding-left: 2px;
+}
+
+.figma-wiki-reversal-group {
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.figma-wiki-reversal-value {
+  font-size: 15px;
+  font-weight: 900;
+  color: #f87171;
+  letter-spacing: 0.03em;
+  margin-top: 2px;
+}
+
+
+/* Form chỉnh sửa chỉ số cơ bản (Admin) */
+.figma-detail-stats-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.figma-detail-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.figma-detail-edit-field label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #cbd5e1;
+  text-transform: uppercase;
+}
+
+.figma-detail-edit-field input,
+.figma-detail-edit-field select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(20, 50, 75, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-size: 13px;
+  outline: none;
+}
+
+.figma-detail-edit-field input:focus,
+.figma-detail-edit-field select:focus {
+  border-color: #38bdf8;
+}
+
+.figma-detail-stats-edit-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.btn-save-action {
+  flex: 1;
+  padding: 9px;
+  border-radius: 8px;
+  background: #0284c7;
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-cancel-action {
+  flex: 1;
+  padding: 9px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* =========================================================
+   CỘT PHẢI: BẢNG FRAME DATA & MOVESET (CHUẨN MIZUUMI WIKI)
+   Nền kính trong suốt, sáng sủa, hòa nhập với bầu trời
+   ========================================================= */
+
+.figma-detail-framedata-panel {
+  flex: 1;
+  height: 100%;
+  background: rgba(18, 54, 84, 0.42);
+  border-radius: 28px;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  padding: 18px 22px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Thanh điều khiển trên cùng */
+.figma-detail-controls-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.figma-detail-search-input {
+  width: 250px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-size: 13px;
+  outline: none;
+}
+
+.figma-detail-search-input::placeholder {
+  color: #cbd5e1;
+}
+
+.figma-detail-search-input:focus {
+  border-color: #38bdf8;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.figma-detail-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0, 0, 0, 0.18);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.figma-detail-filter-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+
+.figma-detail-filter-btn:hover {
+  color: #ffffff;
+}
+
+.figma-detail-filter-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+/* Bộ chuyển đổi chế độ xem: Bảng vs Thẻ Mizuumi */
+.figma-view-mode-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  margin-left: auto;
+}
+
+.figma-view-mode-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.figma-view-mode-btn:hover {
+  color: #ffffff;
+}
+
+.figma-view-mode-btn.active {
+  background: rgba(56, 189, 248, 0.35);
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.figma-detail-btn-add {
+  padding: 7px 16px;
+  border-radius: 9px;
+  background: rgba(34, 197, 94, 0.3);
+  border: 1.5px solid #22c55e;
+  color: #bbf7d0;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  white-space: nowrap;
+}
+
+.figma-detail-btn-add:hover {
+  background: rgba(34, 197, 94, 0.5);
+  color: #ffffff;
+}
+
+/* =========================================================
+   CHẾ ĐỘ 1: BẢNG TRA CỨU NHANH (TABLE VIEW)
+   Không gian rộng rãi, thoáng mát, các cột vừa vặn
+   ========================================================= */
+
+.figma-detail-table-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(15, 42, 68, 0.35);
+  min-height: 0;
+}
+
+.figma-framedata-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.figma-framedata-table th {
+  background: rgba(22, 62, 96, 0.85);
+  color: #7dd3fc;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  padding: 12px 10px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+  font-size: 13px;
+}
+
+.figma-framedata-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.figma-framedata-table tr:hover td {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.figma-framedata-table tr.row-expanded td {
+  background: rgba(56, 189, 248, 0.15);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.col-move-name {
+  text-align: left;
+  font-weight: 700;
+  padding-left: 16px !important;
+}
+
+.col-move-title {
+  color: #ffffff;
+  font-weight: 800;
+  margin-right: 8px;
+  font-size: 15px;
+}
+
+.col-move-version {
+  font-size: 12px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+/* Guard badges */
+.guard-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.guard-mid {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.guard-low {
+  background: rgba(249, 115, 22, 0.35);
+  color: #fed7aa;
+  border: 1px solid rgba(249, 115, 22, 0.6);
+}
+
+.guard-overhead {
+  background: rgba(168, 85, 247, 0.35);
+  color: #e9d5ff;
+  border: 1px solid rgba(168, 85, 247, 0.6);
+}
+
+.guard-throw {
+  background: rgba(239, 68, 68, 0.35);
+  color: #fecaca;
+  border: 1px solid rgba(239, 68, 68, 0.6);
+}
+
+.guard-all {
+  background: rgba(59, 130, 246, 0.35);
+  color: #bfdbfe;
+  border: 1px solid rgba(59, 130, 246, 0.6);
+}
+
+/* Màu sắc chỉ số dương / âm trực quan */
+.adv-pos {
+  color: #4ade80 !important;
+  font-weight: 800;
+}
+
+.adv-neg {
+  color: #f87171 !important;
+  font-weight: 800;
+}
+
+.adv-zero {
+  color: #cbd5e1;
+}
+
+.figma-expand-btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(56, 189, 248, 0.25);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.figma-expand-btn:hover {
+  background: rgba(56, 189, 248, 0.45);
+}
+
+/* Sub-panel mở rộng trong Table */
+.figma-table-expanded-drawer {
+  background: rgba(16, 45, 72, 0.75);
+  border-bottom: 2px solid rgba(56, 189, 248, 0.5);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.figma-drawer-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.figma-drawer-version-tag {
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 10px;
+  border-radius: 5px;
+  color: #e2e8f0;
+}
+
+.figma-drawer-stances-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.figma-drawer-subheading {
+  font-size: 12px;
+  font-weight: 800;
+  color: #7dd3fc;
+  text-transform: uppercase;
+}
+
+.figma-substance-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: center;
+  background: rgba(10, 30, 50, 0.4);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.figma-substance-table th {
+  background: rgba(25, 65, 95, 0.7);
+  padding: 8px 10px;
+  color: #cbd5e1;
+  font-size: 12px;
+}
+
+.figma-substance-table td {
+  padding: 8px 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.figma-drawer-properties,
+.figma-drawer-description {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.figma-drawer-prop-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #fde047;
+  text-transform: uppercase;
+}
+
+.figma-drawer-prop-text {
+  margin: 0;
+  font-size: 13px;
+  color: #ffffff;
+  line-height: 1.45;
+}
+
+.figma-drawer-desc-text {
+  margin: 0;
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   CHẾ ĐỘ 2: THẺ CHI TIẾT MIZUUMI WIKI (CARDS VIEW)
+   ========================================================= */
+
+.figma-detail-cards-scroll {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-right: 6px;
+  min-height: 0;
+}
+
+.figma-mizuumi-card {
+  background: rgba(18, 54, 86, 0.5);
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  border-radius: 18px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.figma-mizuumi-card:hover {
+  border-color: rgba(56, 189, 248, 0.5);
+  background: rgba(18, 54, 86, 0.65);
+}
+
+.figma-mizuumi-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.figma-mizuumi-card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.figma-mizuumi-notation {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+}
+
+.figma-mizuumi-version-badge {
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 3px 9px;
+  border-radius: 6px;
+}
+
+.figma-mizuumi-card-table-wrap {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.figma-mizuumi-subtable th {
+  padding: 9px 8px;
+  font-size: 12px;
+  background: rgba(22, 62, 96, 0.85);
+}
+
+.figma-mizuumi-subtable td {
+  padding: 9px 8px;
+  font-size: 13px;
+}
+
+.figma-mizuumi-card-properties {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  background: rgba(245, 158, 11, 0.15);
+  border-left: 3px solid #f59e0b;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.figma-mizuumi-prop-label {
+  font-weight: 800;
+  color: #fbbf24;
+  white-space: nowrap;
+}
+
+.figma-mizuumi-prop-content {
+  color: #fef08a;
+}
+
+.figma-mizuumi-card-desc {
+  font-size: 13px;
+  color: #e2e8f0;
+  line-height: 1.5;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+
+.figma-empty-notice {
+  padding: 50px;
+  text-align: center;
+  color: #e2e8f0;
+  font-size: 15px;
+}
+
+/* Nút thao tác Admin */
+.figma-detail-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-table-edit {
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(234, 179, 8, 0.3);
+  border: 1px solid #eab308;
+  color: #fef08a;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-table-delete {
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(239, 68, 68, 0.3);
+  border: 1px solid #ef4444;
+  color: #fca5a5;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* =========================================================
+   MODAL FORM THÊM / SỬA ĐÒN ĐÁNH (ADMIN)
+   ========================================================= */
+
+.figma-detail-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.figma-detail-modal-box {
+  width: min(680px, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #11263c;
+  border: 1.5px solid rgba(56, 189, 248, 0.5);
+  border-radius: 24px;
+  padding: 26px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.figma-detail-modal-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #38bdf8;
+  text-transform: uppercase;
+}
+
+.figma-detail-move-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.figma-detail-move-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .figma-detail-move-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.figma-detail-hitbox-admin-section {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px dashed rgba(56, 189, 248, 0.45);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.figma-detail-section-title {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #38bdf8;
+}
+
+.figma-file-input {
+  background: rgba(255, 255, 255, 0.08) !important;
+  cursor: pointer;
+  padding: 8px 10px !important;
+}
+
+.figma-admin-hitbox-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.figma-preview-label {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.figma-admin-hitbox-preview-box {
+  position: relative;
+  width: 100%;
+  max-height: 180px;
+  background: #091522;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.figma-admin-hitbox-preview-img {
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+}
+
+.figma-btn-remove-preview {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(239, 68, 68, 0.85);
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.figma-btn-remove-preview:hover {
+  background: #ef4444;
+}
+
+/* =========================================================
+   TABLE VIEW: HITBOX INDICATOR BADGE & DRAWER PREVIEW
+   ========================================================= */
+
+.col-move-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.figma-hitbox-indicator-badge {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(249, 115, 22, 0.35));
+  border: 1px solid rgba(239, 68, 68, 0.6);
+  color: #fca5a5;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.figma-hitbox-indicator-badge:hover {
+  background: #ef4444;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+}
+
+.figma-drawer-hitbox-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(10, 25, 42, 0.45);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.figma-drawer-hitbox-preview {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  height: 200px;
+  background: #091522;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.figma-drawer-hitbox-preview:hover {
+  border-color: #38bdf8;
+  transform: scale(1.01);
+}
+
+.figma-drawer-hitbox-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.figma-drawer-hitbox-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.figma-drawer-hitbox-preview:hover .figma-drawer-hitbox-overlay {
+  opacity: 1;
+}
+
+.figma-drawer-hitbox-caption {
+  font-size: 12px;
+  color: #cbd5e1;
+  font-style: italic;
+}
+
+/* =========================================================
+   CARDS VIEW: MIZUUMI WIKI SPLIT LAYOUT (HITBOX + STATS)
+   ========================================================= */
+
+.figma-mizuumi-card-content-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 16px;
+  align-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .figma-mizuumi-card-content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.figma-mizuumi-hitbox-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.figma-mizuumi-hitbox-frame {
+  position: relative;
+  width: 100%;
+  min-height: 190px;
+  height: 100%;
+  background: #071220;
+  border: 1.5px solid rgba(56, 189, 248, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.figma-mizuumi-hitbox-frame.has-image {
+  cursor: pointer;
+}
+
+.figma-mizuumi-hitbox-frame.has-image:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 6px 18px rgba(56, 189, 248, 0.25);
+}
+
+.figma-mizuumi-hitbox-thumb {
+  width: 100%;
+  height: 100%;
+  min-height: 190px;
+  max-height: 240px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.figma-mizuumi-hitbox-frame.has-image:hover .figma-mizuumi-hitbox-thumb {
+  transform: scale(1.03);
+}
+
+.figma-hitbox-badge-tag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(239, 68, 68, 0.85);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 5px;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.figma-hitbox-zoom-hint {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #38bdf8;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 2;
+}
+
+.figma-mizuumi-hitbox-frame.has-image:hover .figma-hitbox-zoom-hint {
+  opacity: 1;
+}
+
+.figma-hitbox-empty-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #64748b;
+  padding: 24px 12px;
+}
+
+.figma-hitbox-empty-icon {
+  font-size: 28px;
+  opacity: 0.6;
+}
+
+.figma-hitbox-empty-text {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.figma-mizuumi-hitbox-subnote {
+  font-size: 12px;
+  color: #cbd5e1;
+  font-style: italic;
+  padding: 0 4px;
+}
+
+.figma-mizuumi-details-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* =========================================================
+   HITBOX LIGHTBOX MODAL (FULLSCREEN HIGH-RES VIEWER)
+   ========================================================= */
+
+.figma-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 12, 22, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 24px;
+  animation: fadeIn 0.2s ease;
+}
+
+.figma-lightbox-box {
+  width: min(960px, 95vw);
+  max-height: 90vh;
+  background: rgba(14, 38, 64, 0.95);
+  border: 1.5px solid rgba(56, 189, 248, 0.6);
+  border-radius: 24px;
+  padding: 22px 28px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 35px rgba(56, 189, 248, 0.2);
+  animation: scaleUp 0.25s ease;
+  overflow: hidden;
+}
+
+.figma-lightbox-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 12px;
+}
+
+.figma-lightbox-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.figma-lightbox-badge {
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.figma-lightbox-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.figma-lightbox-version {
+  font-size: 13px;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.figma-lightbox-close-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.figma-lightbox-close-btn:hover {
+  background: rgba(239, 68, 68, 0.8);
+  border-color: #ef4444;
+  transform: rotate(90deg);
+}
+
+.figma-lightbox-img-wrap {
+  width: 100%;
+  max-height: calc(90vh - 170px);
+  background: #06111e;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.figma-lightbox-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.figma-lightbox-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 4px;
+}
+
+.figma-lightbox-caption {
+  font-size: 13px;
+  color: #e2e8f0;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 6px 16px;
+  border-radius: 9999px;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .figma-detail-main-layout {
+    flex-direction: column;
+  }
+  .figma-detail-stats-panel.figma-teal-card {
+    width: 100%;
+    height: auto;
+    max-height: 320px;
+  }
+  .figma-detail-container {
+    height: auto;
+    min-height: 92vh;
+  }
+}
+

@@ -87,23 +87,32 @@ export class CharacterController {
   @Post('admin/characters/:id/moves')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
+  @UseInterceptors(FileInterceptor('hitbox', multerOptions))
   @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data', 'application/json')
   @ApiOperation({ summary: 'Thêm đòn đánh cho nhân vật (Admin)' })
-  createCharacterMove(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateMoveDto) {
-    return this.characterService.createCharacterMove(id, dto);
+  createCharacterMove(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: CreateMoveDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return this.characterService.createCharacterMove(id, dto, file);
   }
 
   @Put('admin/characters/:id/moves/:moveId')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
+  @UseInterceptors(FileInterceptor('hitbox', multerOptions))
   @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data', 'application/json')
   @ApiOperation({ summary: 'Cập nhật đòn đánh của nhân vật (Admin)' })
   updateCharacterMove(
     @Param('id', ParseIntPipe) id: number,
     @Param('moveId', ParseIntPipe) moveId: number,
     @Body() dto: Partial<CreateMoveDto>,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.characterService.updateCharacterMove(moveId, id, dto);
+    return this.characterService.updateCharacterMove(moveId, id, dto, file);
   }
 
   @Delete('admin/characters/:id/moves/:moveId')

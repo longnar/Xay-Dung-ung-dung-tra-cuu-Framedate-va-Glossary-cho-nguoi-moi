@@ -53,6 +53,41 @@ export class CreateMoveDto {
   @IsOptional()
   @IsString()
   INVULNERABILITY?: string;
+
+  @ApiPropertyOptional({ example: '/uploads/hitbox-12345.png' })
+  @IsOptional()
+  @IsString()
+  hitbox_url?: string;
+
+  @ApiPropertyOptional({ example: 'Frame 6-8 Active Hitbox' })
+  @IsOptional()
+  @IsString()
+  hitbox_caption?: string;
+
+  @ApiPropertyOptional({ example: 'normal' })
+  @IsOptional()
+  @IsString()
+  move_type?: string;
+
+  @ApiPropertyOptional({ example: 'Mid' })
+  @IsOptional()
+  @IsString()
+  guard?: string;
+
+  @ApiPropertyOptional({ example: 'Chemistry / Gadget' })
+  @IsOptional()
+  @IsString()
+  version?: string;
+
+  @ApiPropertyOptional({ example: 'Special-cancellable on block' })
+  @IsOptional()
+  @IsString()
+  properties?: string;
+
+  @ApiPropertyOptional({ example: 'Core poke used in neutral.' })
+  @IsOptional()
+  @IsString()
+  description?: string;
 }
 
 export class UpsertBaseStatsDto {

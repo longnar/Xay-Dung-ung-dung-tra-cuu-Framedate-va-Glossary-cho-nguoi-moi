@@ -1,5 +1,4 @@
--- Run this migration against an existing idol_showdown_wiki database.
-USE idol_showdown_wiki;
+-- Run this migration against an existing database.
 
 CREATE TABLE IF NOT EXISTS character_moves (
     id INT AUTO_INCREMENT PRIMARY KEY,

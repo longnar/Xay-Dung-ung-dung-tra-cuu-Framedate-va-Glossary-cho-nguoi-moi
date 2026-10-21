@@ -23,7 +23,7 @@ async function migrate() {
                 ca: process.env.DB_CA_PATH
                     ? fs.readFileSync(process.env.DB_CA_PATH, 'utf8')
                     : undefined,
-                rejectUnauthorized: true
+                rejectUnauthorized: false
             }
             : undefined
     });

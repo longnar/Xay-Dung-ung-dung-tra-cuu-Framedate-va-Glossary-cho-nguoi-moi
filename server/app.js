@@ -5,6 +5,7 @@ const path = require('path');
 const authRoutes = require('../routes/authRoutes');
 const characterRoutes = require('../routes/characterRoutes');
 const glossaryRoutes = require('../routes/glossaryRoutes');
+const newsRoutes = require('../routes/newsRoutes');
 const db = require('../config/database');
 
 function createApp() {
@@ -24,7 +25,8 @@ function createApp() {
             endpoints: {
                 auth: '/api/auth',
                 characters: '/api/characters',
-                glossaries: '/api/glossaries'
+                glossaries: '/api/glossaries',
+                news: '/api/news'
             }
         });
     });
@@ -44,6 +46,7 @@ function createApp() {
     app.use('/api/auth', authRoutes);
     app.use('/api', characterRoutes);
     app.use('/api', glossaryRoutes);
+    app.use('/api', newsRoutes);
 
     app.get(/^(?!\/api(?:\/|$)).*/, (req, res, next) => {
         res.sendFile(path.join(frontendDistPath, 'index.html'), (error) => {

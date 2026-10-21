@@ -36,6 +36,27 @@ export class CharacterMove {
   @Column({ length: 255, nullable: true })
   INVULNERABILITY: string | null;
 
+  @Column({ length: 255, nullable: true })
+  hitbox_url: string | null;
+
+  @Column({ length: 255, nullable: true })
+  hitbox_caption: string | null;
+
+  @Column({ length: 50, nullable: true, default: 'normal' })
+  move_type: string | null;
+
+  @Column({ length: 50, nullable: true, default: 'Mid' })
+  guard: string | null;
+
+  @Column({ length: 100, nullable: true })
+  version: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  properties: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  description: string | null;
+
   @ManyToOne(() => Character, (character) => character.moves, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'character_id' })
   character: Character;

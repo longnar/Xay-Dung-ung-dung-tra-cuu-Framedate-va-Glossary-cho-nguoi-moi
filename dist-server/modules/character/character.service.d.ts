@@ -26,11 +26,11 @@ export declare class CharacterService {
     }>;
     getCharacterMoves(characterId: number): Promise<CharacterMove[]>;
     getCharacterBaseStats(characterId: number): Promise<CharacterBaseStat | null>;
-    createCharacterMove(characterId: number, dto: CreateMoveDto): Promise<{
+    createCharacterMove(characterId: number, dto: CreateMoveDto, file?: Express.Multer.File): Promise<{
         message: string;
         move: CharacterMove;
     }>;
-    updateCharacterMove(moveId: number, characterId: number, dto: Partial<CreateMoveDto>): Promise<{
+    updateCharacterMove(moveId: number, characterId: number, dto: Partial<CreateMoveDto>, file?: Express.Multer.File): Promise<{
         message: string;
         move: CharacterMove;
     }>;

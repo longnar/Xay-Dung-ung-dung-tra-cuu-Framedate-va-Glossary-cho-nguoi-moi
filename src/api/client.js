@@ -39,4 +39,9 @@ export const api = {
   createGlossary: (body) => apiRequest('/api/admin/glossaries', { method: 'POST', body }),
   updateGlossary: (id, body) => apiRequest(`/api/admin/glossaries/${id}`, { method: 'PUT', body }),
   deleteGlossary: (id) => apiRequest(`/api/admin/glossaries/${id}`, { method: 'DELETE' }),
+  getNews: () => apiRequest('/api/news'),
+  getNewsItem: (id) => apiRequest(`/api/news/${id}`),
+  createNews: (body) => apiRequest('/api/admin/news', { method: 'POST', body }),
+  updateNews: (id, body) => apiRequest(`/api/admin/news/${id}`, { method: 'PUT', body }),
+  deleteNews: (id) => apiRequest(`/api/admin/news/${id}`, { method: 'DELETE' }),
 }

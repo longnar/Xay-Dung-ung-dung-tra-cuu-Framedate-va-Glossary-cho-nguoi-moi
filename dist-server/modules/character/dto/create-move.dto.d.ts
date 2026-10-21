@@ -8,6 +8,13 @@ export declare class CreateMoveDto {
     ADV_ON_BLOCK?: number;
     ADV_ON_HIT?: number;
     INVULNERABILITY?: string;
+    hitbox_url?: string;
+    hitbox_caption?: string;
+    move_type?: string;
+    guard?: string;
+    version?: string;
+    properties?: string;
+    description?: string;
 }
 export declare class UpsertBaseStatsDto {
     HP?: number;

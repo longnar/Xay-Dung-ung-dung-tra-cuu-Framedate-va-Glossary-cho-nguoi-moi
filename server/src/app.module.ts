@@ -41,6 +41,11 @@ import { AppController } from './app.controller';
                 rejectUnauthorized: false,
               }
             : false,
+          extra: {
+            connectionLimit: 10,
+            enableKeepAlive: true,
+            keepAliveInitialDelay: 10000,
+          },
         };
       },
     }),

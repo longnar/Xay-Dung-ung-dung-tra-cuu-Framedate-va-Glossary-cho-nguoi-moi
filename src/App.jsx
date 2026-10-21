@@ -11,6 +11,10 @@ import { decodeBase64Image } from './utils/decodeImage'
 import { api } from './api/client'
 import GlossaryEditor from './components/glossary/GlossaryEditor'
 import GlossaryEntries from './components/glossary/GlossaryEntries'
+import CharacterSelectGrid from './components/character/CharacterSelectGrid'
+import CharacterDetailModal from './components/character/CharacterDetailModal'
+import NewsScreen from './components/news/NewsScreen'
+import './components/character/CharacterStyles.css'
 import './App.css'
 
 function App() {
@@ -39,6 +43,9 @@ function App() {
   const [characterForm, setCharacterForm] = useState({
     name: '', debut_date: '', description: '', difficulty: 1, type: '', image: null
   })
+  const [dbCharacters, setDbCharacters] = useState([])
+  const [selectedCharacter, setSelectedCharacter] = useState(null)
+  const [isCharDetailOpen, setIsCharDetailOpen] = useState(false)
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -187,6 +194,8 @@ function App() {
     try {
       await api.createCharacter(form)
       setCharacterForm({ name: '', debut_date: '', description: '', difficulty: 1, type: '', image: null })
+      setMainCharacterImagePreview('')
+      await loadCharacters()
       setActivePage('selection')
     } catch (error) {
       console.error('Unable to create character.', error)
@@ -321,6 +330,27 @@ function App() {
     return () => window.removeEventListener('auth-expired', handleAuthExpired)
   }, [])
 
+  const loadCharacters = async () => {
+    setIsDataLoading(true)
+    try {
+      const list = await api.getCharacters()
+      setDbCharacters(list)
+      if (list.length > 0) {
+        setSelectedCharacter((prev) => prev ? list.find(c => c.id === prev.id) || list[0] : list[0])
+      }
+    } catch (error) {
+      console.error('Unable to load characters.', error)
+    } finally {
+      setIsDataLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (activePage === 'selection' || activePage === 'selection-add') {
+      loadCharacters()
+    }
+  }, [activePage])
+
   const loadGlossaries = async () => {
     setIsDataLoading(true)
     setDataError('')
@@ -347,7 +377,7 @@ function App() {
           <button type="button" className="nav-link" onClick={() => setActivePage('home')}>
             Replay
           </button>
-          <button type="button" className="nav-link" onClick={() => setActivePage('home')}>
+          <button type="button" className="nav-link" onClick={() => setActivePage('news')}>
             News
           </button>
           <button type="button" className="nav-link" onClick={() => setActivePage('contacts')}>
@@ -362,7 +392,7 @@ function App() {
       <main>
         <section className="hero" id="hero">
           <div className="hero-art" aria-hidden="true" style={{ backgroundImage: `url(${heroArtImage})` }} />
-          <div className="hero-overlay" aria-hidden="true" />
+          <div className="hero-overlay" aria-hidden="true"> 
           <div className="hero-content">
             <img className="game-logo" src={gameLogo} alt="Idol Showdown Next Fest" />
             <p className="game-meta">
@@ -381,7 +411,8 @@ function App() {
               Download
             </a>
           </div>
-        </section>
+        </div>
+      </section>
 
         <section className="home-lower">
           <div className="home-copy">
@@ -580,25 +611,29 @@ function App() {
   }
 
   const renderSelection = () => (
-    <main className="selection-screen" aria-label="Chọn chế độ Idol Showdown">
-      <div className="selection-diamond" aria-hidden="true" />
+    <CharacterSelectGrid
+      characters={dbCharacters}
+      selectedCharacter={selectedCharacter || dbCharacters[0]}
+      onSelectCharacter={(char) => setSelectedCharacter(char)}
+      onOpenDetails={(char) => {
+        setSelectedCharacter(char)
+        setIsCharDetailOpen(true)
+      }}
+      onAddNewCharacter={() => {
+        setCharacterForm({ name: '', debut_date: '', description: '', difficulty: 1, type: '', image: null })
+        setMainCharacterImagePreview('')
+        setActivePage('selection-add')
+      }}
+      isAuthenticated={isAuthenticated}
+      onBackHome={() => setActivePage('home')}
+    />
+  )
 
-      <button type="button" className="back-button selection-back" onClick={() => setActivePage('home')} aria-label="Quay lại trang trước">
-        <svg className="selection-icon-svg" viewBox="0 0 269 269" role="img" aria-label="Quay lại">
-          <path
-            className="selection-hitbox"
-            d="M34 132C28 89 52 52 95 31C126 16 165 16 201 31C228 43 246 56 260 75C272 92 271 111 256 124C238 139 218 154 204 166C189 178 180 191 171 198C158 208 145 209 131 204C112 197 102 180 91 180C71 180 60 194 53 209C46 224 33 232 19 226C8 220 7 205 12 189C16 171 21 155 34 132Z"
-          />
-          <image href={brandIcon} x="0" y="0" width="269" height="269" preserveAspectRatio="xMidYMid meet" />
-        </svg>
-      </button>
-
-      {isAuthenticated && (
-        <button type="button" className="add-selection" onClick={() => setActivePage('selection-add')} aria-label="Thêm lựa chọn">
-          +
-        </button>
-      )}
-    </main>
+  const renderNews = () => (
+    <NewsScreen
+      isAuthenticated={isAuthenticated}
+      onBackHome={() => setActivePage('home')}
+    />
   )
 
   const renderSelectionAdd = () => (
@@ -705,6 +740,8 @@ function App() {
         return isAuthenticated ? renderSelectionAdd() : renderSelection()
       case 'selection':
         return renderSelection()
+      case 'news':
+        return renderNews()
       default:
         return renderHome()
     }
@@ -713,6 +750,14 @@ function App() {
   return (
     <div className="page-shell">
       {renderPage()}
+
+      <CharacterDetailModal
+        character={selectedCharacter}
+        isOpen={isCharDetailOpen}
+        onClose={() => setIsCharDetailOpen(false)}
+        isAuthenticated={isAuthenticated}
+        onUpdated={() => loadCharacters()}
+      />
 
       <div className={`login-modal ${isLoginOpen ? '' : 'hidden'}`} role="dialog" aria-modal="true" aria-labelledby="login-title">
         <div className="login-modal-backdrop" onClick={() => setIsLoginOpen(false)} aria-hidden="true" />

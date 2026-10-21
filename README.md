@@ -66,7 +66,7 @@ structural refactors.
 
 ## Phân tích bài toán
 
-### 1) Phân tích các đối tượng
+### 1 Phân tích các đối tượng
 
 #### User / Admin
 

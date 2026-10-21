@@ -60,6 +60,34 @@ __decorate([
     __metadata("design:type", String)
 ], CharacterMove.prototype, "INVULNERABILITY", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ length: 255, nullable: true }),
+    __metadata("design:type", String)
+], CharacterMove.prototype, "hitbox_url", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 255, nullable: true }),
+    __metadata("design:type", String)
+], CharacterMove.prototype, "hitbox_caption", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 50, nullable: true, default: 'normal' }),
+    __metadata("design:type", String)
+], CharacterMove.prototype, "move_type", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 50, nullable: true, default: 'Mid' }),
+    __metadata("design:type", String)
+], CharacterMove.prototype, "guard", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ length: 100, nullable: true }),
+    __metadata("design:type", String)
+], CharacterMove.prototype, "version", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], CharacterMove.prototype, "properties", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], CharacterMove.prototype, "description", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => character_entity_1.Character, (character) => character.moves, { onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinColumn)({ name: 'character_id' }),
     __metadata("design:type", character_entity_1.Character)

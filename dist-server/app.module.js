@@ -84,6 +84,11 @@ exports.AppModule = AppModule = __decorate([
                                 rejectUnauthorized: false,
                             }
                             : false,
+                        extra: {
+                            connectionLimit: 10,
+                            enableKeepAlive: true,
+                            keepAliveInitialDelay: 10000,
+                        },
                     };
                 },
             }),

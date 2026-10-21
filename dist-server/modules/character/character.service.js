@@ -141,27 +141,39 @@ let CharacterService = class CharacterService {
         await this.getCharacterById(characterId);
         return this.baseStatRepo.findOne({ where: { character_id: characterId } });
     }
-    async createCharacterMove(characterId, dto) {
+    async createCharacterMove(characterId, dto, file) {
         await this.getCharacterById(characterId);
+        const hitboxUrl = file ? `/uploads/${file.filename}` : (dto.hitbox_url || null);
         const newMove = this.moveRepo.create({
             character_id: characterId,
             ...dto,
+            hitbox_url: hitboxUrl,
         });
         const saved = await this.moveRepo.save(newMove);
         return { message: 'Character move created successfully.', move: saved };
     }
-    async updateCharacterMove(moveId, characterId, dto) {
+    async updateCharacterMove(moveId, characterId, dto, file) {
         const move = await this.moveRepo.findOne({ where: { id: moveId, character_id: characterId } });
         if (!move)
             throw new common_1.NotFoundException('Character move not found.');
+        if (file) {
+            if (move.hitbox_url && move.hitbox_url.startsWith('/uploads/')) {
+                this.deleteUploadedFile(move.hitbox_url);
+            }
+            dto.hitbox_url = `/uploads/${file.filename}`;
+        }
         Object.assign(move, dto);
         const saved = await this.moveRepo.save(move);
         return { message: 'Character move updated successfully.', move: saved };
     }
     async deleteCharacterMove(moveId, characterId) {
-        const result = await this.moveRepo.delete({ id: moveId, character_id: characterId });
-        if (result.affected === 0)
+        const move = await this.moveRepo.findOne({ where: { id: moveId, character_id: characterId } });
+        if (!move)
             throw new common_1.NotFoundException('Character move not found.');
+        if (move.hitbox_url && move.hitbox_url.startsWith('/uploads/')) {
+            this.deleteUploadedFile(move.hitbox_url);
+        }
+        await this.moveRepo.remove(move);
         return { message: 'Character move deleted successfully.' };
     }
     async upsertCharacterBaseStats(characterId, dto) {
