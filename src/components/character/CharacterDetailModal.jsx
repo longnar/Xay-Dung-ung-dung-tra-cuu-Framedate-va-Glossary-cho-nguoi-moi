@@ -46,10 +46,9 @@ export default function CharacterDetailModal({ character, isOpen, onClose, isAut
   const loadDetails = async (id) => {
     setIsLoadingData(true);
     try {
-      const [statsRes, movesRes] = await Promise.all([
-        characterApi.get(id).then(c => c.baseStats).catch(() => null),
-        characterApi.get(id).then(c => c.moves).catch(() => [])
-      ]);
+      const data = await characterApi.get(id);
+      const statsRes = data?.base_stats || data?.baseStats;
+      const movesRes = data?.moves;
       setStats(statsRes || null);
       if (statsRes) {
         setStatsForm({
@@ -124,9 +123,14 @@ export default function CharacterDetailModal({ character, isOpen, onClose, isAut
     if (!window.confirm('Bạn có chắc muốn xóa đòn đánh này?')) return;
     try {
       await characterApi.removeMove(character.id, moveId);
+      setMoves((prev) => prev.filter((m) => m.id !== moveId));
       loadDetails(character.id);
     } catch (err) {
-      alert('Không thể xóa đòn đánh: ' + err.message);
+      if (err.message && err.message.includes('not found')) {
+        setMoves((prev) => prev.filter((m) => m.id !== moveId));
+      } else {
+        alert('Không thể xóa đòn đánh: ' + err.message);
+      }
     }
   };
 

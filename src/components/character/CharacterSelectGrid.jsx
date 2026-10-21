@@ -8,24 +8,16 @@ import CharacterDetailView from './CharacterDetailView';
 
 // Thông tin mặc định cho 13 nhân vật chuẩn bị sẵn trường hợp database chưa có đủ
 const DEFAULT_CHARACTERS_INFO = {
-  coco: {
+  fubuki: {
     id: 1,
-    name: 'Kiryu Coco',
-    type: 'Grappler / Power',
-    difficulty: 4,
-    debut_date: '2019-12-28',
-    description: 'Chủ tịch Rồng huyền thoại với các đòn vật uy lực khổng lồ và áp lực tầm gần đáng sợ.'
-  },
-  ina: {
-    id: 2,
-    name: "Ninomae Ina'nis",
-    type: 'Zoner / Spacing',
-    difficulty: 3,
-    debut_date: '2020-09-13',
-    description: 'Tư tế Cthulhu triệu hồi các xúc tu cổ đại để kiểm soát không gian võ đài từ xa.'
+    name: 'Shirakami Fubuki',
+    type: 'Rushdown / Shoto',
+    difficulty: 2,
+    debut_date: '2018-06-01',
+    description: 'Cáo tuyết tốc độ cao với các cú đá xoay, phi tiêu băng và khả năng combo trên không mượt mà.'
   },
   korone: {
-    id: 3,
+    id: 2,
     name: 'Inugami Korone',
     type: 'Brawler / Pressure',
     difficulty: 3,
@@ -33,12 +25,20 @@ const DEFAULT_CHARACTERS_INFO = {
     description: 'Chú chó võ sĩ với chuỗi đòn đấm liên hoàn uy lực và khả năng áp sát dồn ép đối thủ.'
   },
   sora: {
-    id: 4,
+    id: 3,
     name: 'Tokino Sora',
     type: 'Balanced / Shoto',
     difficulty: 1,
     debut_date: '2017-09-07',
     description: 'Đại tiền bối Hololive với bộ kỹ năng công thủ toàn diện, lý tưởng cho người mới bắt đầu.'
+  },
+  ayame: {
+    id: 4,
+    name: 'Nakiri Ayame',
+    type: 'Rushdown / Duelist',
+    difficulty: 2,
+    debut_date: '2018-09-03',
+    description: 'Quỷ Oni song kiếm với những pha lướt chém thần tốc, công kích dồn dập khiến đối thủ choáng ngợp.'
   },
   suisei: {
     id: 5,
@@ -48,69 +48,69 @@ const DEFAULT_CHARACTERS_INFO = {
     debut_date: '2018-03-22',
     description: 'Idol sát thủ trang bị búa rìu sao băng, sở hữu những chuỗi combo biến hóa và đòn trừng phạt chí mạng.'
   },
-  pekora: {
+  coco: {
     id: 6,
-    name: 'Usada Pekora',
-    type: 'Trapper / Gimmick',
+    name: 'Kiryu Coco',
+    type: 'Grappler / Power',
     difficulty: 4,
-    debut_date: '2019-07-17',
-    description: 'Thỏ điên mang theo kho vũ khí rocket và bẫy thuốc nổ TNT tạo nên thế trận bất ngờ.'
+    debut_date: '2019-12-28',
+    description: 'Chủ tịch Rồng huyền thoại với các đòn vật uy lực khổng lồ và áp lực tầm gần đáng sợ.'
   },
-  ollie: {
+  botan: {
     id: 7,
-    name: 'Kureiji Ollie',
-    type: 'Rushdown / Berserker',
+    name: 'Shishiro Botan',
+    type: 'Zoner / Tactical',
     difficulty: 3,
-    debut_date: '2020-12-04',
-    description: 'Nữ thần zombie siêu tốc với lối đánh cuồng loạn khó đoán và khả năng truy đuổi liên tục.'
-  },
-  biboo: {
-    id: 8,
-    name: 'Koseki Bijou',
-    type: 'Heavy / Counter',
-    difficulty: 3,
-    debut_date: '2023-07-30',
-    description: 'Viên ngọc kiên cố với sức chống chịu phi thường cùng các đòn giáng đá sấm sét nặng trịch.'
-  },
-  fubuki: {
-    id: 9,
-    name: 'Shirakami Fubuki',
-    type: 'Rushdown / Shoto',
-    difficulty: 2,
-    debut_date: '2018-06-01',
-    description: 'Cáo tuyết tốc độ cao với các cú đá xoay, phi tiêu băng và khả năng combo trên không mượt mà.'
-  },
-  koyori: {
-    id: 10,
-    name: 'Hakui Koyori',
-    type: 'Zoner / Chemist',
-    difficulty: 3,
-    debut_date: '2021-11-28',
-    description: 'Nhà nghiên cứu chó sói thông minh tạo hỗn loạn bằng các bình độc dược và vụ nổ hoá học.'
+    debut_date: '2020-08-14',
+    description: 'Sư tử bắn tỉa thiện chiến áp đảo đối phương bằng súng trường, lựu đạn và chiến thuật cự ly xa.'
   },
   aki: {
-    id: 11,
+    id: 8,
     name: 'Aki Rosenthal',
     type: 'Stance / Magic',
     difficulty: 4,
     debut_date: '2018-06-01',
     description: 'Thiếu nữ Siren uyển chuyển với vũ điệu thôi miên và phép thuật điều khiển bím tóc ma thuật.'
   },
-  ayame: {
-    id: 12,
-    name: 'Nakiri Ayame',
-    type: 'Rushdown / Duelist',
-    difficulty: 2,
-    debut_date: '2018-09-03',
-    description: 'Quỷ Oni song kiếm với những pha lướt chém thần tốc, công kích dồn dập khiến đối thủ choáng ngợp.'
+  pekora: {
+    id: 9,
+    name: 'Usada Pekora',
+    type: 'Trapper / Gimmick',
+    difficulty: 4,
+    debut_date: '2019-07-17',
+    description: 'Thỏ điên mang theo kho vũ khí rocket và bẫy thuốc nổ TNT tạo nên thế trận bất ngờ.'
   },
-  botan: {
-    id: 13,
-    name: 'Shishiro Botan',
-    type: 'Zoner / Tactical',
+  ina: {
+    id: 10,
+    name: "Ninomae Ina'nis",
+    type: 'Zoner / Spacing',
     difficulty: 3,
-    debut_date: '2020-08-14',
-    description: 'Sư tử bắn tỉa thiện chiến áp đảo đối phương bằng súng trường, lựu đạn và chiến thuật cự ly xa.'
+    debut_date: '2020-09-13',
+    description: 'Tư tế Cthulhu triệu hồi các xúc tu cổ đại để kiểm soát không gian võ đài từ xa.'
+  },
+  ollie: {
+    id: 11,
+    name: 'Kureiji Ollie',
+    type: 'Rushdown / Berserker',
+    difficulty: 3,
+    debut_date: '2020-12-04',
+    description: 'Nữ thần zombie siêu tốc với lối đánh cuồng loạn khó đoán và khả năng truy đuổi liên tục.'
+  },
+  koyori: {
+    id: 12,
+    name: 'Hakui Koyori',
+    type: 'Zoner / Chemist',
+    difficulty: 3,
+    debut_date: '2021-11-28',
+    description: 'Nhà nghiên cứu chó sói thông minh tạo hỗn loạn bằng các bình độc dược và vụ nổ hoá học.'
+  },
+  biboo: {
+    id: 13,
+    name: 'Koseki Bijou (Biboo)',
+    type: 'Heavy / Counter',
+    difficulty: 3,
+    debut_date: '2023-07-30',
+    description: 'Viên ngọc kiên cố với sức chống chịu phi thường cùng các đòn giáng đá sấm sét nặng trịch.'
   }
 };
 

@@ -50,19 +50,18 @@ export default function CharacterDetailView({ character, isAuthenticated = false
   const loadDataFromApi = async (charId) => {
     if (!charId) return;
     try {
-      const [statsRes, movesRes] = await Promise.all([
-        characterApi.get(charId).then((c) => c.baseStats).catch(() => null),
-        characterApi.get(charId).then((c) => c.moves).catch(() => [])
-      ]);
+      const data = await characterApi.get(charId);
+      const statsRes = data?.base_stats || data?.baseStats;
+      const movesRes = data?.moves;
       if (statsRes) {
         setStats(statsRes);
         setStatsForm(statsRes);
       }
-      if (Array.isArray(movesRes) && movesRes.length > 0) {
+      if (Array.isArray(movesRes)) {
         setMoves(movesRes);
       }
-    } catch {
-      // Dùng fallback
+    } catch (err) {
+      console.warn('Could not load data from API, using fallback data:', err);
     }
   };
 
@@ -236,12 +235,17 @@ export default function CharacterDetailView({ character, isAuthenticated = false
     try {
       if (character?.id && typeof character.id === 'number') {
         await characterApi.removeMove(character.id, moveId);
+        setMoves((prev) => prev.filter((m) => m.id !== moveId));
         await loadDataFromApi(character.id);
       } else {
-        setMoves(moves.filter((m) => m.id !== moveId));
+        setMoves((prev) => prev.filter((m) => m.id !== moveId));
       }
     } catch (err) {
-      alert('Không thể xóa đòn đánh: ' + err.message);
+      if (err.message && err.message.includes('not found')) {
+        setMoves((prev) => prev.filter((m) => m.id !== moveId));
+      } else {
+        alert('Không thể xóa đòn đánh: ' + err.message);
+      }
     }
   };
 
