@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { characterApi } from '../../api/character.api';
-import { getCharacterArt } from '../../utils/characterAssets';
+import { getCharacterArt, getCharacterCutout } from '../../utils/characterAssets';
 import { getFallbackDetails } from '../../data/characterFallbackData';
 import selectionPolygon from '../../assets/decorative/selection-polygon.svg';
 import './CharacterDetailView.css';
@@ -10,6 +10,9 @@ export default function CharacterDetailView({ character, isAuthenticated = false
   const [stats, setStats] = useState(fallback.stats);
   const [moves, setMoves] = useState(fallback.moves);
   const [isEditingStats, setIsEditingStats] = useState(false);
+  const [isEditingStyle, setIsEditingStyle] = useState(false);
+  const [characterType, setCharacterType] = useState(character?.type || 'Fighter');
+  const [styleInput, setStyleInput] = useState(character?.type || 'Fighter');
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [viewMode, setViewMode] = useState('TABLE'); // 'TABLE' | 'CARDS'
@@ -70,11 +73,28 @@ export default function CharacterDetailView({ character, isAuthenticated = false
     setStats(fb.stats);
     setStatsForm(fb.stats);
     setMoves(fb.moves);
+    setCharacterType(character?.type || 'Fighter');
+    setStyleInput(character?.type || 'Fighter');
 
     if (character?.id && typeof character.id === 'number') {
       loadDataFromApi(character.id);
     }
   }, [character]);
+
+  // Lưu Phong cách (Style) của nhân vật (Admin)
+  const handleSaveStyle = async (e) => {
+    e.preventDefault();
+    try {
+      if (character?.id && typeof character.id === 'number') {
+        await characterApi.update(character.id, { type: styleInput });
+      }
+      setCharacterType(styleInput);
+      if (character) character.type = styleInput;
+      setIsEditingStyle(false);
+    } catch (err) {
+      alert('Không thể lưu phong cách: ' + err.message);
+    }
+  };
 
   // Lưu thông số cơ bản (Admin)
   const handleSaveStats = async (e) => {
@@ -303,6 +323,7 @@ export default function CharacterDetailView({ character, isAuthenticated = false
   });
 
   const charAvatar = getCharacterArt(character?.name);
+  const charCutout = getCharacterCutout(character?.name);
 
   const formatAdv = (val) => {
     if (val === undefined || val === null || val === '') return '-';
@@ -363,7 +384,17 @@ export default function CharacterDetailView({ character, isAuthenticated = false
             <div>
               <h1 className="figma-detail-char-name">{character?.name}</h1>
               <div className="figma-detail-header-meta">
-                <span>Phong cách: <strong>{character?.type || 'Fighter'}</strong></span>
+                <span>Phong cách: <strong>{characterType}</strong></span>
+                {isAuthenticated && !isEditingStyle && (
+                  <button
+                    type="button"
+                    className="figma-detail-edit-style-inline-btn"
+                    onClick={() => setIsEditingStyle(true)}
+                    title="Sửa Phong cách (Admin)"
+                  >
+                    ✎ Sửa Style
+                  </button>
+                )}
                 <span>•</span>
                 <span>Độ khó: <strong>{character?.difficulty || 3}/5</strong></span>
               </div>
@@ -387,22 +418,77 @@ export default function CharacterDetailView({ character, isAuthenticated = false
               aria-hidden="true"
             />
 
-            {/* Banner chân dung nhân vật */}
+            {/* Banner chân dung nhân vật (sử dụng Cutout PNG theo yêu cầu) */}
             <div className="figma-teal-portrait-box">
-              {charAvatar ? (
+              {charCutout || charAvatar ? (
                 <img
-                  src={charAvatar}
+                  src={charCutout || charAvatar}
                   alt={character?.name}
-                  className="figma-teal-portrait-img"
+                  className="figma-teal-portrait-img figma-teal-portrait-cutout"
                 />
               ) : (
                 <div className="figma-teal-portrait-placeholder">NO ART</div>
               )}
               <div className="figma-teal-portrait-overlay">
-                <span className="figma-teal-tag-arch">{character?.type || 'FIGHTER'}</span>
+                <div className="figma-teal-tag-row">
+                  <span className="figma-teal-tag-arch">{characterType}</span>
+                  {isAuthenticated && !isEditingStyle && (
+                    <button
+                      type="button"
+                      className="figma-teal-edit-style-btn"
+                      onClick={() => setIsEditingStyle(true)}
+                      title="Sửa Style (Admin)"
+                    >
+                      ✎ Sửa Style
+                    </button>
+                  )}
+                </div>
                 <span className="figma-teal-char-title">{character?.name}</span>
               </div>
             </div>
+
+            {/* Form sửa Phong cách / Style (Admin) */}
+            {isEditingStyle && (
+              <form className="figma-detail-style-edit-form" onSubmit={handleSaveStyle}>
+                <div className="figma-style-edit-title-row">
+                  <strong>Chỉnh sửa Phong cách (Style)</strong>
+                  <button
+                    type="button"
+                    className="figma-style-close-btn"
+                    onClick={() => setIsEditingStyle(false)}
+                    title="Đóng"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="figma-detail-edit-field">
+                  <input
+                    type="text"
+                    value={styleInput}
+                    onChange={(e) => setStyleInput(e.target.value)}
+                    placeholder="ví dụ: Zoner / Chemist, Rushdown / Shoto..."
+                    required
+                  />
+                </div>
+                <div className="figma-style-presets">
+                  <span>Gợi ý:</span>
+                  {['Zoner', 'Rushdown', 'Grappler', 'Shoto', 'Balanced', 'Mixup', 'Trapper', 'Duelist'].map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      className="preset-pill-btn"
+                      onClick={() => setStyleInput(p)}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+                <div className="figma-detail-stats-edit-actions">
+                  <button type="submit" className="btn-save-action">Lưu Style</button>
+                  <button type="button" className="btn-cancel-action" onClick={() => setIsEditingStyle(false)}>Hủy</button>
+                </div>
+              </form>
+            )}
 
             {/* Tiêu đề & nút Sửa */}
             <div className="figma-detail-stats-title-row">

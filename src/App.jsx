@@ -615,6 +615,7 @@ function App() {
       characters={dbCharacters}
       selectedCharacter={selectedCharacter || dbCharacters[0]}
       onSelectCharacter={(char) => setSelectedCharacter(char)}
+      onCharacterUpdated={loadCharacters}
       onOpenDetails={(char) => {
         setSelectedCharacter(char)
         setIsCharDetailOpen(true)

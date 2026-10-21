@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { characterApi } from '../../api/character.api';
 import brandIcon from '../../assets/branding/IdolShowdownIcon.png';
 import selectionFrame from '../../assets/decorative/selection-frame.svg';
 import selectionPolygon from '../../assets/decorative/selection-polygon.svg';
@@ -120,6 +121,7 @@ export default function CharacterSelectGrid({
   onSelectCharacter,
   onOpenDetails,
   onAddNewCharacter,
+  onCharacterUpdated,
   isAuthenticated,
   onBackHome
 }) {
@@ -127,6 +129,17 @@ export default function CharacterSelectGrid({
   const [viewMode, setViewMode] = useState('diamond');
   const [hoveredButtonKey, setHoveredButtonKey] = useState(null);
   const [activeChar, setActiveChar] = useState(null);
+
+  // State chỉnh sửa thông tin nhân vật (Admin) ở màn hình Showcase
+  const [isEditingChar, setIsEditingChar] = useState(false);
+  const [charForm, setCharForm] = useState({
+    name: '',
+    type: '',
+    difficulty: 3,
+    debut_date: '',
+    description: '',
+  });
+  const [isSavingChar, setIsSavingChar] = useState(false);
 
   // Tìm kiếm thông tin character tương ứng từ danh sách prop characters (DB) hoặc fallback
   const resolveCharacter = (btnConfig) => {
@@ -162,6 +175,48 @@ export default function CharacterSelectGrid({
 
   const handleSlotMouseLeave = () => {
     setHoveredButtonKey(null);
+  };
+
+  // Mở modal sửa thông tin nhân vật (Admin)
+  const handleOpenEditChar = () => {
+    if (!currentChar) return;
+    setCharForm({
+      name: currentChar.name || '',
+      type: currentChar.type || 'Fighter',
+      difficulty: currentChar.difficulty ?? 3,
+      debut_date: currentChar.debut_date ? currentChar.debut_date.slice(0, 10) : '',
+      description: currentChar.description || '',
+    });
+    setIsEditingChar(true);
+  };
+
+  // Lưu thông tin nhân vật đã sửa (Admin)
+  const handleSaveChar = async (e) => {
+    e.preventDefault();
+    setIsSavingChar(true);
+    try {
+      const form = new FormData();
+      Object.entries(charForm).forEach(([key, val]) => {
+        if (val !== undefined && val !== null) form.append(key, val);
+      });
+
+      if (currentChar?.id && typeof currentChar.id === 'number') {
+        const res = await characterApi.update(currentChar.id, form);
+        const updated = res.character || { ...currentChar, ...charForm };
+        setActiveChar(updated);
+        if (onSelectCharacter) onSelectCharacter(updated);
+      } else {
+        const updated = { ...currentChar, ...charForm };
+        setActiveChar(updated);
+        if (onSelectCharacter) onSelectCharacter(updated);
+      }
+      if (onCharacterUpdated) onCharacterUpdated();
+      setIsEditingChar(false);
+    } catch (err) {
+      alert('Không thể lưu thông tin nhân vật: ' + err.message);
+    } finally {
+      setIsSavingChar(false);
+    }
   };
 
   // Nếu đang ở chế độ xem chi tiết Frame Data toàn cảnh (Phương án A)
@@ -279,7 +334,19 @@ export default function CharacterSelectGrid({
               </div>
 
               <div className="figma-showcase-text-content">
-                <h2 className="figma-showcase-title">Thông tin cơ bản:</h2>
+                <div className="figma-showcase-header-row">
+                  <h2 className="figma-showcase-title">Thông tin cơ bản:</h2>
+                  {isAuthenticated && (
+                    <button
+                      type="button"
+                      className="figma-showcase-edit-btn"
+                      onClick={handleOpenEditChar}
+                      title="Sửa thông tin nhân vật (Admin)"
+                    >
+                      ✎ Sửa thông tin
+                    </button>
+                  )}
+                </div>
                 <h3 className="figma-showcase-char-name">{currentChar?.name}</h3>
 
                 <div className="figma-showcase-props">
@@ -344,6 +411,114 @@ export default function CharacterSelectGrid({
                 );
               })}
             </aside>
+          </div>
+        </div>
+      )}
+
+      {/* Modal chỉnh sửa thông tin nhân vật (Admin) */}
+      {isEditingChar && (
+        <div className="figma-char-edit-backdrop" onClick={() => setIsEditingChar(false)}>
+          <div className="figma-char-edit-card" onClick={(e) => e.stopPropagation()}>
+            <div className="figma-char-edit-header">
+              <h3>Sửa thông tin: {currentChar?.name}</h3>
+              <button
+                type="button"
+                className="figma-char-edit-close-btn"
+                onClick={() => setIsEditingChar(false)}
+                title="Đóng"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form className="figma-char-edit-form" onSubmit={handleSaveChar}>
+              <div className="figma-char-edit-field">
+                <label htmlFor="edit-char-name">Tên nhân vật:</label>
+                <input
+                  id="edit-char-name"
+                  type="text"
+                  value={charForm.name}
+                  onChange={(e) => setCharForm({ ...charForm, name: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="figma-char-edit-field">
+                <label htmlFor="edit-char-type">Phong cách / Phân loại (Style):</label>
+                <input
+                  id="edit-char-type"
+                  type="text"
+                  value={charForm.type}
+                  onChange={(e) => setCharForm({ ...charForm, type: e.target.value })}
+                  placeholder="ví dụ: Zoner / Chemist, Rushdown / Shoto..."
+                  required
+                />
+                <div className="figma-char-edit-presets">
+                  <span>Gợi ý:</span>
+                  {['Zoner', 'Rushdown', 'Grappler', 'Shoto', 'Balanced', 'Mixup', 'Trapper', 'Duelist'].map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      className="preset-tag-btn"
+                      onClick={() => setCharForm({ ...charForm, type: p })}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="figma-char-edit-row">
+                <div className="figma-char-edit-field">
+                  <label htmlFor="edit-char-difficulty">Độ khó (1 - 5):</label>
+                  <select
+                    id="edit-char-difficulty"
+                    value={charForm.difficulty}
+                    onChange={(e) => setCharForm({ ...charForm, difficulty: Number(e.target.value) })}
+                  >
+                    <option value={1}>★☆☆☆☆ (1/5 - Dễ / Căn bản)</option>
+                    <option value={2}>★★☆☆☆ (2/5 - Khá dễ)</option>
+                    <option value={3}>★★★☆☆ (3/5 - Trung bình)</option>
+                    <option value={4}>★★★★☆ (4/5 - Khó)</option>
+                    <option value={5}>★★★★★ (5/5 - Rất khó / Chuyên sâu)</option>
+                  </select>
+                </div>
+
+                <div className="figma-char-edit-field">
+                  <label htmlFor="edit-char-debut">Ngày Debut:</label>
+                  <input
+                    id="edit-char-debut"
+                    type="date"
+                    value={charForm.debut_date}
+                    onChange={(e) => setCharForm({ ...charForm, debut_date: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="figma-char-edit-field">
+                <label htmlFor="edit-char-description">Mô tả nhân vật:</label>
+                <textarea
+                  id="edit-char-description"
+                  rows={3}
+                  value={charForm.description}
+                  onChange={(e) => setCharForm({ ...charForm, description: e.target.value })}
+                  placeholder="Mô tả phong cách, nét đặc trưng chiến đấu..."
+                />
+              </div>
+
+              <div className="figma-char-edit-actions">
+                <button type="submit" className="figma-btn-save-char" disabled={isSavingChar}>
+                  {isSavingChar ? 'Đang lưu...' : 'Lưu thông tin'}
+                </button>
+                <button
+                  type="button"
+                  className="figma-btn-cancel-char"
+                  onClick={() => setIsEditingChar(false)}
+                >
+                  Hủy
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

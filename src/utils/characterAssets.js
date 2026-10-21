@@ -28,6 +28,21 @@ import pekoraTp from '../../asset/Pekora Promo Art TP.png';
 import soraTp from '../../asset/Sora Promo Art TP.png';
 import suiseiTp from '../../asset/Suisei Promo Art TP.png';
 
+// Hinh nhan vat cat canh (Cutout PNG) tu folder asset
+import akiCutout from '../../asset/Aki_Cutout.png';
+import ayameCutout from '../../asset/Ayame_Cutout.png';
+import bibooCutout from '../../asset/Biboo_Cutout.png';
+import botanCutout from '../../asset/Botan_Cutout.png';
+import cocoCutout from '../../asset/Coco_Cutout.png';
+import fubukiCutout from '../../asset/Fubuki_Cutout.png';
+import inaCutout from '../../asset/Ina_Cutout.png';
+import koroneCutout from '../../asset/Korone_Cutout.png';
+import koyoriCutout from '../../asset/Koyori_Cutout.png';
+import ollieCutout from '../../asset/Ollie_Cutout.png';
+import pekoraCutout from '../../asset/Pekora_Cutout.png';
+import soraCutout from '../../asset/Sora_Cutout.png';
+import suiseiCutout from '../../asset/Suisei_Cutout.png';
+
 export const characterArtMap = {
   'Aki': akiArt,
   'Aki Rosenthal': akiArt,
@@ -108,3 +123,45 @@ export function getCharacterTpArt(name) {
   }
   return null;
 }
+
+export const characterCutoutMap = {
+  'Aki': akiCutout,
+  'Aki Rosenthal': akiCutout,
+  'Ayame': ayameCutout,
+  'Nakiri Ayame': ayameCutout,
+  'Biboo': bibooCutout,
+  'Koseki Bijou': bibooCutout,
+  'Koseki Bijou (Biboo)': bibooCutout,
+  'Botan': botanCutout,
+  'Shishiro Botan': botanCutout,
+  'Coco': cocoCutout,
+  'Kiryu Coco': cocoCutout,
+  'Fubuki': fubukiCutout,
+  'Shirakami Fubuki': fubukiCutout,
+  'Ina': inaCutout,
+  "Ninomae Ina'nis": inaCutout,
+  'Korone': koroneCutout,
+  'Inugami Korone': koroneCutout,
+  'Koyori': koyoriCutout,
+  'Hakui Koyori': koyoriCutout,
+  'Ollie': ollieCutout,
+  'Kureiji Ollie': ollieCutout,
+  'Pekora': pekoraCutout,
+  'Usada Pekora': pekoraCutout,
+  'Sora': soraCutout,
+  'Tokino Sora': soraCutout,
+  'Suisei': suiseiCutout,
+  'Hoshimachi Suisei': suiseiCutout,
+};
+
+// Lay hinh nhan vat cat canh Cutout PNG
+export function getCharacterCutout(name) {
+  if (!name) return null;
+  for (const [key, val] of Object.entries(characterCutoutMap)) {
+    if (name.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(name.toLowerCase())) {
+      return val;
+    }
+  }
+  return null;
+}
+

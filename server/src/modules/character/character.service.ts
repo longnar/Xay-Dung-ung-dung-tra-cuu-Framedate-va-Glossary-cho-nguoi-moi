@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, HttpException, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as fs from 'fs';
@@ -135,15 +135,26 @@ export class CharacterService {
   }
 
   async deleteCharacterMove(moveId: number, characterId: number) {
-    const move = await this.moveRepo.findOne({ where: { id: moveId, character_id: characterId } });
-    if (!move) throw new NotFoundException('Character move not found.');
+    try {
+      let move = await this.moveRepo.findOne({ where: { id: moveId, character_id: characterId } });
+      if (!move) {
+        move = await this.moveRepo.findOne({ where: { id: moveId } });
+      }
+      if (!move) {
+        return { message: 'Character move not found or already deleted.' };
+      }
 
-    if (move.hitbox_url && move.hitbox_url.startsWith('/uploads/')) {
-      this.deleteUploadedFile(move.hitbox_url);
+      if (move.hitbox_url && move.hitbox_url.startsWith('/uploads/')) {
+        this.deleteUploadedFile(move.hitbox_url);
+      }
+
+      await this.moveRepo.delete({ id: move.id });
+      return { message: 'Character move deleted successfully.' };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      console.error('[Error] deleteCharacterMove failed:', error);
+      throw new InternalServerErrorException(error.message || 'Lỗi khi xóa đòn đánh trong cơ sở dữ liệu.');
     }
-
-    await this.moveRepo.remove(move);
-    return { message: 'Character move deleted successfully.' };
   }
 
   async upsertCharacterBaseStats(characterId: number, dto: UpsertBaseStatsDto) {

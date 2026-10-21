@@ -3,8 +3,16 @@ import { apiRequest } from './client'
 export const characterApi = {
   list: () => apiRequest('/api/characters'),
   get: (id) => apiRequest(`/api/characters/${id}`),
-  create: (body) => apiRequest('/api/admin/characters', { method: 'POST', body }),
-  update: (id, body) => apiRequest(`/api/admin/characters/${id}`, { method: 'PUT', body }),
+  create: (body) =>
+    apiRequest('/api/admin/characters', {
+      method: 'POST',
+      body: body instanceof FormData ? body : JSON.stringify(body),
+    }),
+  update: (id, body) =>
+    apiRequest(`/api/admin/characters/${id}`, {
+      method: 'PUT',
+      body: body instanceof FormData ? body : JSON.stringify(body),
+    }),
   remove: (id) => apiRequest(`/api/admin/characters/${id}`, { method: 'DELETE' }),
   createMove: (id, body) =>
     apiRequest(`/api/admin/characters/${id}/moves`, {
