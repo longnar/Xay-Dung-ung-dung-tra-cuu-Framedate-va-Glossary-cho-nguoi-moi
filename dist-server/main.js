@@ -45,8 +45,8 @@ async function bootstrap() {
     const document = swagger_1.SwaggerModule.createDocument(app, swaggerConfig);
     swagger_1.SwaggerModule.setup('api/docs', app, document);
     const PORT = Number(process.env.PORT) || 5000;
-    const isProduction = process.env.NODE_ENV === 'production' || !!process.env.RENDER;
-    const HOST = process.env.HOST || (isProduction ? '0.0.0.0' : '127.0.0.1');
+    const isLocalhostOnly = process.env.HOST === '127.0.0.1' && !process.env.RENDER && !process.env.RENDER_SERVICE_ID;
+    const HOST = isLocalhostOnly ? '127.0.0.1' : '0.0.0.0';
     await app.listen(PORT, HOST);
     console.log('==================================================');
     console.log(`  NestJS API Server running on: http://localhost:${PORT}`);
