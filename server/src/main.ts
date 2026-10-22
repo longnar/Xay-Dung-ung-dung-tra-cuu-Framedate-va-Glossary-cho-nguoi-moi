@@ -7,7 +7,10 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors();
+  app.enableCors({
+    origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5000', 'http://127.0.0.1:5000'],
+    credentials: true,
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -27,7 +30,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   const PORT = process.env.PORT || 5000;
-  await app.listen(PORT, '0.0.0.0');
+  await app.listen(PORT, '127.0.0.1');
 
   console.log('==================================================');
   console.log(`  NestJS API Server running on: http://localhost:${PORT}`);

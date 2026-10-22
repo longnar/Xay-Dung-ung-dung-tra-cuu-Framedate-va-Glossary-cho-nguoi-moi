@@ -47,14 +47,15 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto) {
-    const { username, password, role } = registerDto;
+    const { username, password } = registerDto;
 
     const existingUser = await this.userRepository.findOne({ where: { username } });
     if (existingUser) {
       throw new BadRequestException('Username is already taken.');
     }
 
-    const userRole = role === 'admin' ? 'admin' : 'guest';
+    // Bảo mật: Mọi tài khoản tự đăng ký luôn là 'guest', ngăn chặn leo quyền Admin trái phép
+    const userRole = 'guest';
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = this.userRepository.create({
