@@ -167,14 +167,26 @@ let CharacterService = class CharacterService {
         return { message: 'Character move updated successfully.', move: saved };
     }
     async deleteCharacterMove(moveId, characterId) {
-        const move = await this.moveRepo.findOne({ where: { id: moveId, character_id: characterId } });
-        if (!move)
-            throw new common_1.NotFoundException('Character move not found.');
-        if (move.hitbox_url && move.hitbox_url.startsWith('/uploads/')) {
-            this.deleteUploadedFile(move.hitbox_url);
+        try {
+            let move = await this.moveRepo.findOne({ where: { id: moveId, character_id: characterId } });
+            if (!move) {
+                move = await this.moveRepo.findOne({ where: { id: moveId } });
+            }
+            if (!move) {
+                return { message: 'Character move not found or already deleted.' };
+            }
+            if (move.hitbox_url && move.hitbox_url.startsWith('/uploads/')) {
+                this.deleteUploadedFile(move.hitbox_url);
+            }
+            await this.moveRepo.delete({ id: move.id });
+            return { message: 'Character move deleted successfully.' };
         }
-        await this.moveRepo.remove(move);
-        return { message: 'Character move deleted successfully.' };
+        catch (error) {
+            if (error instanceof common_1.HttpException)
+                throw error;
+            console.error('[Error] deleteCharacterMove failed:', error);
+            throw new common_1.InternalServerErrorException(error.message || 'Lỗi khi xóa đòn đánh trong cơ sở dữ liệu.');
+        }
     }
     async upsertCharacterBaseStats(characterId, dto) {
         await this.getCharacterById(characterId);

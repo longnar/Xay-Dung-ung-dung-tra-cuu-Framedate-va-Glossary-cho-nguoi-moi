@@ -83,12 +83,12 @@ let AuthService = class AuthService {
         };
     }
     async register(registerDto) {
-        const { username, password, role } = registerDto;
+        const { username, password } = registerDto;
         const existingUser = await this.userRepository.findOne({ where: { username } });
         if (existingUser) {
             throw new common_1.BadRequestException('Username is already taken.');
         }
-        const userRole = role === 'admin' ? 'admin' : 'guest';
+        const userRole = 'guest';
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = this.userRepository.create({
             username,

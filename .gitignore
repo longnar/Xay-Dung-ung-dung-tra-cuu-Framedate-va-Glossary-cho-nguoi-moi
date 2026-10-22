@@ -4,6 +4,7 @@ uploads/*
 !uploads/.gitkeep
 .env
 .env.*
+!.env.example
 *.log
 coverage/
 .DS_Store

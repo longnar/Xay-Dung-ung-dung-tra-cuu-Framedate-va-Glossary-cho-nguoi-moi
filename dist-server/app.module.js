@@ -50,9 +50,11 @@ const character_entity_1 = require("./entities/character.entity");
 const character_move_entity_1 = require("./entities/character-move.entity");
 const character_base_stat_entity_1 = require("./entities/character-base-stat.entity");
 const glossary_entity_1 = require("./entities/glossary.entity");
+const security_audit_log_entity_1 = require("./entities/security-audit-log.entity");
 const auth_module_1 = require("./modules/auth/auth.module");
 const character_module_1 = require("./modules/character/character.module");
 const glossary_module_1 = require("./modules/glossary/glossary.module");
+const security_module_1 = require("./modules/security/security.module");
 const app_controller_1 = require("./app.controller");
 let AppModule = class AppModule {
 };
@@ -76,7 +78,7 @@ exports.AppModule = AppModule = __decorate([
                         username: configService.get('DB_USER') || 'root',
                         password: configService.get('DB_PASSWORD') || '',
                         database: configService.get('DB_NAME') || 'idol_showdown_wiki',
-                        entities: [user_entity_1.User, character_entity_1.Character, character_move_entity_1.CharacterMove, character_base_stat_entity_1.CharacterBaseStat, glossary_entity_1.Glossary],
+                        entities: [user_entity_1.User, character_entity_1.Character, character_move_entity_1.CharacterMove, character_base_stat_entity_1.CharacterBaseStat, glossary_entity_1.Glossary, security_audit_log_entity_1.SecurityAuditLog],
                         synchronize: false,
                         logging: false,
                         ssl: useSsl
@@ -103,6 +105,7 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             character_module_1.CharacterModule,
             glossary_module_1.GlossaryModule,
+            security_module_1.SecurityModule,
         ],
         controllers: [app_controller_1.AppController],
     })
