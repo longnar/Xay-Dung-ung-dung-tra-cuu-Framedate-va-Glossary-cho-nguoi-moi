@@ -9,8 +9,7 @@ import selectionFrame from './assets/decorative/selection-frame.svg'
 import selectionPolygon from './assets/decorative/selection-polygon.svg'
 import { decodeBase64Image } from './utils/decodeImage'
 import { api } from './api/client'
-import GlossaryEditor from './components/glossary/GlossaryEditor'
-import GlossaryEntries from './components/glossary/GlossaryEntries'
+import GlossaryScreen from './components/glossary/GlossaryScreen'
 import CharacterSelectGrid from './components/character/CharacterSelectGrid'
 import CharacterDetailModal from './components/character/CharacterDetailModal'
 import NewsScreen from './components/news/NewsScreen'
@@ -518,7 +517,7 @@ function App() {
         <img src={brandIcon} alt="Quay lại" />
       </button>
 
-      <button type="button" className="glossary-panel basic" onClick={() => setActivePage(isAuthenticated ? 'glossary-basic' : 'glossary-basic-view')} aria-label="Mở phần Basic glossary">
+      <button type="button" className="glossary-panel basic" onClick={() => setActivePage('glossary-basic')} aria-label="Mở phần Basic glossary">
         <div className="panel-visual" />
         <img className="panel-character" src={pixelFubuki} alt="" />
         <div className="panel-content">
@@ -527,7 +526,7 @@ function App() {
         </div>
       </button>
 
-      <button type="button" className="glossary-panel advanced" onClick={() => setActivePage(isAuthenticated ? 'glossary-advanced' : 'glossary-advanced-view')} aria-label="Mở phần Advanced glossary">
+      <button type="button" className="glossary-panel advanced" onClick={() => setActivePage('glossary-advanced')} aria-label="Mở phần Advanced glossary">
         <div className="panel-visual" />
         <img className="panel-character" src={pixelKoyori} alt="" />
         <div className="panel-content">
@@ -539,76 +538,13 @@ function App() {
     </main>
   )
 
-  const renderGlossaryAdmin = (type) => {
-    const isBasic = type === 'basic'
-    const title = isBasic ? 'Basic' : 'Advanced'
-    const entries = glossaries.filter((entry) => entry.level === type)
-
-    return (
-      <main className={`glossary-admin-screen ${isBasic ? 'admin-basic' : 'admin-advanced'}`} aria-label={`Quản lý mục Glossary ${title}`}>
-        <button type="button" className="admin-back-button" onClick={() => setActivePage('glossary')} aria-label="Quay lại Glossary">
-          <span aria-hidden="true">←</span>
-        </button>
-
-        <section className="admin-panel" aria-label={`Thêm nội dung ${title}`}>
-          <aside className="left-panel" aria-label={`Sidebar ${title}`}>
-            <button type="button" className="add-button" onClick={() => setGlossaryForm({ id: null, term: '', definition: '', level: type, video_url: '', image: null })}>
-              <span className="plus" aria-hidden="true">+</span>
-              <span className="button-text">Thêm</span>
-            </button>
-          </aside>
-
-          <div className="right-panel" aria-label={`Khu vực chỉnh sửa ${title}`}>
-            <GlossaryEditor
-              value={glossaryForm}
-              onChange={setGlossaryForm}
-              onSubmit={handleGlossarySubmit}
-              onCancel={() => setGlossaryForm({ id: null, term: '', definition: '', level: type, video_url: '', image: null })}
-            />
-            <GlossaryEntries
-              entries={entries}
-              isLoading={isDataLoading}
-              onEdit={(entry) => setGlossaryForm({ ...entry, image: null })}
-              onDelete={handleDeleteGlossary}
-            />
-          </div>
-
-        </section>
-      </main>
-    )
-  }
-
-  const renderGlossaryView = (type) => {
-    const isBasic = type === 'basic'
-    const title = isBasic ? 'BASIC' : 'ADVANCED'
-    const description = isBasic
-      ? 'Những thứ cơ bản nhất về Fighting game mà bạn muốn biết để làm quen với mọi Fighting game.'
-      : 'Những thứ nâng cao hơn nếu bạn muốn cải thiện trình độ hoặc muốn hiểu sâu hơn về Fighting game.'
-
-    return (
-      <main className={`glossary-view-screen ${isBasic ? 'view-basic' : 'view-advanced'}`} aria-label={`Glossary ${title}`}>
-        <button type="button" className="admin-back-button" onClick={() => setActivePage('glossary')} aria-label="Quay lại Glossary">
-          <span aria-hidden="true">←</span>
-        </button>
-        <article className="glossary-view-card">
-          <h1>{title}</h1>
-          <p>{description}</p>
-          {dataError && <p role="alert">{dataError}</p>}
-          {isDataLoading && <p>Đang tải dữ liệu...</p>}
-          {!isDataLoading && glossaries.filter((entry) => entry.level === type).map((entry) => (
-            <article className="glossary-entry" key={entry.id}>
-              <h2>{entry.term}</h2>
-              <p>{entry.definition}</p>
-              {entry.video_url && <a href={entry.video_url} target="_blank" rel="noreferrer">Xem video</a>}
-            </article>
-          ))}
-          {!isDataLoading && glossaries.filter((entry) => entry.level === type).length === 0 && (
-            <p className="glossary-view-placeholder">Chưa có nội dung.</p>
-          )}
-        </article>
-      </main>
-    )
-  }
+  const renderGlossarySection = (level) => (
+    <GlossaryScreen
+      initialLevel={level}
+      isAuthenticated={isAuthenticated}
+      onBackHome={() => setActivePage('glossary')}
+    />
+  )
 
   const renderSelection = () => (
     <CharacterSelectGrid
@@ -730,13 +666,11 @@ function App() {
       case 'glossary':
         return renderGlossary()
       case 'glossary-basic':
-        return isAuthenticated ? renderGlossaryAdmin('basic') : renderGlossaryView('basic')
-      case 'glossary-advanced':
-        return isAuthenticated ? renderGlossaryAdmin('advanced') : renderGlossaryView('advanced')
       case 'glossary-basic-view':
-        return renderGlossaryView('basic')
+        return renderGlossarySection('basic')
+      case 'glossary-advanced':
       case 'glossary-advanced-view':
-        return renderGlossaryView('advanced')
+        return renderGlossarySection('advanced')
       case 'selection-add':
         return isAuthenticated ? renderSelectionAdd() : renderSelection()
       case 'selection':
