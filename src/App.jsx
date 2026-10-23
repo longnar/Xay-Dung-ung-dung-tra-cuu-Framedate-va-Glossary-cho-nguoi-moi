@@ -11,7 +11,6 @@ import { decodeBase64Image } from './utils/decodeImage'
 import { api } from './api/client'
 import GlossaryScreen from './components/glossary/GlossaryScreen'
 import CharacterSelectGrid from './components/character/CharacterSelectGrid'
-import CharacterDetailModal from './components/character/CharacterDetailModal'
 import NewsScreen from './components/news/NewsScreen'
 import './components/character/CharacterStyles.css'
 import './App.css'
@@ -33,18 +32,11 @@ function App() {
   const [characterCards, setCharacterCards] = useState([])
   const [cardUrls, setCardUrls] = useState({})
   const cardUrlsRef = useRef({})
-  const [glossaries, setGlossaries] = useState([])
-  const [dataError, setDataError] = useState('')
-  const [isDataLoading, setIsDataLoading] = useState(false)
-  const [glossaryForm, setGlossaryForm] = useState({
-    id: null, term: '', definition: '', level: 'basic', video_url: '', image: null
-  })
   const [characterForm, setCharacterForm] = useState({
     name: '', debut_date: '', description: '', difficulty: 1, type: '', image: null
   })
   const [dbCharacters, setDbCharacters] = useState([])
   const [selectedCharacter, setSelectedCharacter] = useState(null)
-  const [isCharDetailOpen, setIsCharDetailOpen] = useState(false)
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -534,7 +526,6 @@ function App() {
           <p>Những thứ nâng cao hơn nếu bạn muốn cải thiện trình độ hoặc muốn hiểu sâu hơn về Fighting game</p>
         </div>
       </button>
-      {dataError && <p className="data-error" role="alert">{dataError}</p>}
     </main>
   )
 
@@ -552,10 +543,6 @@ function App() {
       selectedCharacter={selectedCharacter || dbCharacters[0]}
       onSelectCharacter={(char) => setSelectedCharacter(char)}
       onCharacterUpdated={loadCharacters}
-      onOpenDetails={(char) => {
-        setSelectedCharacter(char)
-        setIsCharDetailOpen(true)
-      }}
       onAddNewCharacter={() => {
         setCharacterForm({ name: '', debut_date: '', description: '', difficulty: 1, type: '', image: null })
         setMainCharacterImagePreview('')
@@ -685,14 +672,6 @@ function App() {
   return (
     <div className="page-shell">
       {renderPage()}
-
-      <CharacterDetailModal
-        character={selectedCharacter}
-        isOpen={isCharDetailOpen}
-        onClose={() => setIsCharDetailOpen(false)}
-        isAuthenticated={isAuthenticated}
-        onUpdated={() => loadCharacters()}
-      />
 
       <div className={`login-modal ${isLoginOpen ? '' : 'hidden'}`} role="dialog" aria-modal="true" aria-labelledby="login-title">
         <div className="login-modal-backdrop" onClick={() => setIsLoginOpen(false)} aria-hidden="true" />
