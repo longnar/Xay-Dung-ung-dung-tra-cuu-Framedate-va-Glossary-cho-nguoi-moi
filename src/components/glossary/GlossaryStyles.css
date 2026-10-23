@@ -127,39 +127,29 @@
   box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
 }
 
-/* Bộ chuyển đổi Tab (Basic / Advanced) */
-.figma-glossary-level-tabs {
+/* Nút chuyển đổi nhanh giữa 2 trang Basic và Advanced */
+.figma-glossary-switch-page-btn {
   display: flex;
-  background: rgba(15, 23, 42, 0.6);
-  border-radius: 12px;
-  padding: 4px;
-  gap: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.figma-glossary-tab-btn {
-  flex: 1;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   padding: 8px 12px;
-  background: transparent;
-  border: none;
-  border-radius: 8px;
-  color: #94a3b8;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px dashed rgba(56, 189, 248, 0.4);
+  border-radius: 12px;
+  color: #93c5fd;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
-.figma-glossary-tab-btn:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.figma-glossary-tab-btn.active {
-  background: rgba(56, 189, 248, 0.25);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+.figma-glossary-switch-page-btn:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 /* Thanh tìm kiếm */

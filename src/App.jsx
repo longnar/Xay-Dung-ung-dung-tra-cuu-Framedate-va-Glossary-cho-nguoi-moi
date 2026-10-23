@@ -9,7 +9,8 @@ import selectionFrame from './assets/decorative/selection-frame.svg'
 import selectionPolygon from './assets/decorative/selection-polygon.svg'
 import { decodeBase64Image } from './utils/decodeImage'
 import { api } from './api/client'
-import GlossaryScreen from './components/glossary/GlossaryScreen'
+import GlossaryBasicScreen from './components/glossary/GlossaryBasicScreen'
+import GlossaryAdvancedScreen from './components/glossary/GlossaryAdvancedScreen'
 import CharacterSelectGrid from './components/character/CharacterSelectGrid'
 import NewsScreen from './components/news/NewsScreen'
 import './components/character/CharacterStyles.css'
@@ -529,11 +530,19 @@ function App() {
     </main>
   )
 
-  const renderGlossarySection = (level) => (
-    <GlossaryScreen
-      initialLevel={level}
+  const renderGlossaryBasic = () => (
+    <GlossaryBasicScreen
       isAuthenticated={isAuthenticated}
       onBackHome={() => setActivePage('glossary')}
+      onNavigateToAdvanced={() => setActivePage('glossary-advanced')}
+    />
+  )
+
+  const renderGlossaryAdvanced = () => (
+    <GlossaryAdvancedScreen
+      isAuthenticated={isAuthenticated}
+      onBackHome={() => setActivePage('glossary')}
+      onNavigateToBasic={() => setActivePage('glossary-basic')}
     />
   )
 
@@ -654,10 +663,10 @@ function App() {
         return renderGlossary()
       case 'glossary-basic':
       case 'glossary-basic-view':
-        return renderGlossarySection('basic')
+        return renderGlossaryBasic()
       case 'glossary-advanced':
       case 'glossary-advanced-view':
-        return renderGlossarySection('advanced')
+        return renderGlossaryAdvanced()
       case 'selection-add':
         return isAuthenticated ? renderSelectionAdd() : renderSelection()
       case 'selection':
