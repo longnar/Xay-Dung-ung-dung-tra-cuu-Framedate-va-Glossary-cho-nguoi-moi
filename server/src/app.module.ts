@@ -10,10 +10,12 @@ import { CharacterMove } from './entities/character-move.entity';
 import { CharacterBaseStat } from './entities/character-base-stat.entity';
 import { Glossary } from './entities/glossary.entity';
 import { SecurityAuditLog } from './entities/security-audit-log.entity';
+import { NewsPatch } from './entities/news-patch.entity';
 
 import { AuthModule } from './modules/auth/auth.module';
 import { CharacterModule } from './modules/character/character.module';
 import { GlossaryModule } from './modules/glossary/glossary.module';
+import { NewsModule } from './modules/news/news.module';
 import { SecurityModule } from './modules/security/security.module';
 import { AppController } from './app.controller';
 
@@ -35,7 +37,7 @@ import { AppController } from './app.controller';
           username: configService.get<string>('DB_USER') || 'root',
           password: configService.get<string>('DB_PASSWORD') || '',
           database: configService.get<string>('DB_NAME') || 'idol_showdown_wiki',
-          entities: [User, Character, CharacterMove, CharacterBaseStat, Glossary, SecurityAuditLog],
+          entities: [User, Character, CharacterMove, CharacterBaseStat, Glossary, SecurityAuditLog, NewsPatch],
           synchronize: false, // Dùng schema SQL có sẵn
           logging: false,
           ssl: useSsl
@@ -62,6 +64,7 @@ import { AppController } from './app.controller';
     AuthModule,
     CharacterModule,
     GlossaryModule,
+    NewsModule,
     SecurityModule,
   ],
   controllers: [AppController],

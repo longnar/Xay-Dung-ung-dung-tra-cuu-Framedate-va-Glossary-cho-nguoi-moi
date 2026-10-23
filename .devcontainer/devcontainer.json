@@ -13,7 +13,7 @@
       "onAutoForward": "notify"
     },
     "5000": {
-      "label": "Express API Server",
+      "label": "NestJS API Server",
       "onAutoForward": "notify"
     },
     "3306": {

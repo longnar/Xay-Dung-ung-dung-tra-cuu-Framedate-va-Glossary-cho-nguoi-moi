@@ -119,7 +119,6 @@ export default function CharacterSelectGrid({
   characters = [],
   selectedCharacter,
   onSelectCharacter,
-  onOpenDetails,
   onAddNewCharacter,
   onCharacterUpdated,
   isAuthenticated,

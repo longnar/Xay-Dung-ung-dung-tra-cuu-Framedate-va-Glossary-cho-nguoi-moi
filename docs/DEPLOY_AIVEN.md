@@ -15,7 +15,7 @@ Local dùng MySQL Docker với `DB_SSL=false`.
 1. Tạo MySQL service và database `idol_showdown_wiki`.
 2. Tạo application user riêng, không dùng `root`.
 3. Tải CA certificate từ Aiven vào nơi lưu secret của máy/server.
-4. Copy `.env.aiven.example` thành file environment production và điền host, port, user, password, CA path.
+4. Copy `.env.example` thành file environment production và điền host, port, user, password, CA path.
 5. Chạy migration:
 
 ```powershell

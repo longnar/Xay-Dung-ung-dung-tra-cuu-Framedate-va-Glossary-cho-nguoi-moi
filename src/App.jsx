@@ -11,7 +11,6 @@ import { decodeBase64Image } from './utils/decodeImage'
 import { api } from './api/client'
 import GlossaryScreen from './components/glossary/GlossaryScreen'
 import CharacterSelectGrid from './components/character/CharacterSelectGrid'
-import CharacterDetailModal from './components/character/CharacterDetailModal'
 import NewsScreen from './components/news/NewsScreen'
 import './components/character/CharacterStyles.css'
 import './App.css'
@@ -33,18 +32,12 @@ function App() {
   const [characterCards, setCharacterCards] = useState([])
   const [cardUrls, setCardUrls] = useState({})
   const cardUrlsRef = useRef({})
-  const [glossaries, setGlossaries] = useState([])
   const [dataError, setDataError] = useState('')
-  const [isDataLoading, setIsDataLoading] = useState(false)
-  const [glossaryForm, setGlossaryForm] = useState({
-    id: null, term: '', definition: '', level: 'basic', video_url: '', image: null
-  })
   const [characterForm, setCharacterForm] = useState({
     name: '', debut_date: '', description: '', difficulty: 1, type: '', image: null
   })
   const [dbCharacters, setDbCharacters] = useState([])
   const [selectedCharacter, setSelectedCharacter] = useState(null)
-  const [isCharDetailOpen, setIsCharDetailOpen] = useState(false)
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -202,34 +195,6 @@ function App() {
     }
   }
 
-  const handleGlossarySubmit = async (event) => {
-    event.preventDefault()
-    const form = new FormData()
-    Object.entries(glossaryForm).forEach(([key, value]) => {
-      if (key !== 'id' && value !== null && value !== '') form.append(key, value)
-    })
-    try {
-      if (glossaryForm.id) await api.updateGlossary(glossaryForm.id, form)
-      else await api.createGlossary(form)
-      setGlossaryForm({ id: null, term: '', definition: '', level: 'basic', video_url: '', image: null })
-      await loadGlossaries()
-    } catch (error) {
-      console.error('Unable to save glossary.', error)
-      setDataError(error.message)
-    }
-  }
-
-  const handleDeleteGlossary = async (id) => {
-    if (!window.confirm('Bạn có chắc muốn xóa thuật ngữ này?')) return
-    try {
-      await api.deleteGlossary(id)
-      await loadGlossaries()
-    } catch (error) {
-      console.error('Unable to delete glossary.', error)
-      setDataError(error.message)
-    }
-  }
-
   const handleMainCharacterImageChange = (event) => {
     const file = event.target.files[0] || null
     setCharacterForm((prev) => ({ ...prev, image: file }))
@@ -330,7 +295,6 @@ function App() {
   }, [])
 
   const loadCharacters = async () => {
-    setIsDataLoading(true)
     try {
       const list = await api.getCharacters()
       setDbCharacters(list)
@@ -339,33 +303,12 @@ function App() {
       }
     } catch (error) {
       console.error('Unable to load characters.', error)
-    } finally {
-      setIsDataLoading(false)
     }
   }
 
   useEffect(() => {
     if (activePage === 'selection' || activePage === 'selection-add') {
       loadCharacters()
-    }
-  }, [activePage])
-
-  const loadGlossaries = async () => {
-    setIsDataLoading(true)
-    setDataError('')
-    try {
-      setGlossaries(await api.getGlossaries())
-    } catch (error) {
-      console.error('Unable to load glossaries.', error)
-      setDataError(error.message)
-    } finally {
-      setIsDataLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    if (activePage === 'glossary' || activePage.startsWith('glossary-')) {
-      loadGlossaries()
     }
   }, [activePage])
 
@@ -552,10 +495,6 @@ function App() {
       selectedCharacter={selectedCharacter || dbCharacters[0]}
       onSelectCharacter={(char) => setSelectedCharacter(char)}
       onCharacterUpdated={loadCharacters}
-      onOpenDetails={(char) => {
-        setSelectedCharacter(char)
-        setIsCharDetailOpen(true)
-      }}
       onAddNewCharacter={() => {
         setCharacterForm({ name: '', debut_date: '', description: '', difficulty: 1, type: '', image: null })
         setMainCharacterImagePreview('')
@@ -685,14 +624,6 @@ function App() {
   return (
     <div className="page-shell">
       {renderPage()}
-
-      <CharacterDetailModal
-        character={selectedCharacter}
-        isOpen={isCharDetailOpen}
-        onClose={() => setIsCharDetailOpen(false)}
-        isAuthenticated={isAuthenticated}
-        onUpdated={() => loadCharacters()}
-      />
 
       <div className={`login-modal ${isLoginOpen ? '' : 'hidden'}`} role="dialog" aria-modal="true" aria-labelledby="login-title">
         <div className="login-modal-backdrop" onClick={() => setIsLoginOpen(false)} aria-hidden="true" />

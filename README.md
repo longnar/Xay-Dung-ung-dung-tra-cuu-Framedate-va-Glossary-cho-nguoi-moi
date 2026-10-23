@@ -2,8 +2,9 @@
 
 ## Project layout
 
-- `server/`: Express application factory.
-- `controllers/`, `routes/`, `middleware/`, `config/`: backend feature modules.
+- `server.js`: entry point, loads the compiled NestJS app from `dist-server/main.js`.
+- `server/src/`: NestJS backend source (`main.ts`, `app.module.ts`, `entities/`, `modules/{auth,character,glossary,news,security}`).
+- `dist-server/`: compiled backend output (`npm run build:nestjs`).
 - `src/`: React frontend. `src/api/` contains shared HTTP access.
 - `database/schema/`: initial database schema.
 - `database/migrations/`: incremental migrations.
@@ -56,7 +57,9 @@ npm run start:server
 ```
 
 The API is available at `http://localhost:5000`; the database check is
-`http://localhost:5000/health/db`.
+`http://localhost:5000/health/db`; Swagger docs are at `http://localhost:5000/api/docs`.
+
+UI font: Pixelify Sans (Google Fonts, imported in `src/App.css`).
 
 ## Structure rules
 
@@ -123,7 +126,7 @@ Hệ thống đang xây dựng là một wiki game/kho dữ liệu nhân vật v
 
 ## File quan trọng của hệ thống
 
-- `config/database.js` → File kết nối MySQL chính
+- `server/src/app.module.ts` → Cấu hình kết nối MySQL (TypeORM) và đăng ký các module
 - `database/schema/001_initial_schema.sql` → Cấu trúc CSDL ban đầu
 
 Đây là hai file nền tảng quan trọng để hiểu cấu trúc dữ liệu và kết nối hệ thống.

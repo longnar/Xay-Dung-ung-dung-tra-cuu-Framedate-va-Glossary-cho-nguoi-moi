@@ -17,6 +17,7 @@ npm run db:up
 npm run db:migrate
 ```
 
-The current schema contains users, characters, moves, base stats and glossary
-entries. Character moves reference characters with cascade delete, while base
-stats are one-to-one with a character.
+The current schema contains users, characters, moves, base stats, glossary
+entries, news patches (`news_patches`, migration 006) and security audit logs
+(`security_audit_logs`, migration 005). Character moves reference characters
+with cascade delete, while base stats are one-to-one with a character.

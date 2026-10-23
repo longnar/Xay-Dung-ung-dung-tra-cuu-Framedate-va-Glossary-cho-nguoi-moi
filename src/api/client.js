@@ -31,17 +31,13 @@ export async function apiRequest(url, options = {}) {
 
 export const api = {
   getCharacters: () => apiRequest('/api/characters'),
-  getCharacter: (id) => apiRequest(`/api/characters/${id}`),
   getGlossaries: () => apiRequest('/api/glossaries'),
   createCharacter: (body) => apiRequest('/api/admin/characters', { method: 'POST', body }),
-  updateCharacter: (id, body) => apiRequest(`/api/admin/characters/${id}`, { method: 'PUT', body }),
-  deleteCharacter: (id) => apiRequest(`/api/admin/characters/${id}`, { method: 'DELETE' }),
   createGlossary: (body) => apiRequest('/api/admin/glossaries', { method: 'POST', body }),
   updateGlossary: (id, body) => apiRequest(`/api/admin/glossaries/${id}`, { method: 'PUT', body }),
   deleteGlossary: (id) => apiRequest(`/api/admin/glossaries/${id}`, { method: 'DELETE' }),
   getNews: () => apiRequest('/api/news'),
-  getNewsItem: (id) => apiRequest(`/api/news/${id}`),
-  createNews: (body) => apiRequest('/api/admin/news', { method: 'POST', body }),
-  updateNews: (id, body) => apiRequest(`/api/admin/news/${id}`, { method: 'PUT', body }),
+  createNews: (body) => apiRequest('/api/admin/news', { method: 'POST', body: JSON.stringify(body) }),
+  updateNews: (id, body) => apiRequest(`/api/admin/news/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
   deleteNews: (id) => apiRequest(`/api/admin/news/${id}`, { method: 'DELETE' }),
 }
