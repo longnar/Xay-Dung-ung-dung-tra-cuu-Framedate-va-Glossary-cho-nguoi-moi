@@ -267,9 +267,6 @@ export default function GlossaryScreen({
                     <div className="figma-glossary-card-header">
                       <span className="figma-glossary-card-title">{term.term}</span>
                     </div>
-                    <p className="figma-glossary-card-desc">
-                      {term.definition ? term.definition.slice(0, 95) + '...' : ''}
-                    </p>
                   </button>
                 );
               })
@@ -387,14 +384,6 @@ export default function GlossaryScreen({
                 <header className="figma-glossary-article-header">
                   <div className="figma-glossary-article-title-wrap">
                     <h1 className="figma-glossary-article-title">{activeTerm.term}</h1>
-                    <div className="figma-glossary-article-meta">
-                      <span className={`figma-glossary-badge ${activeTerm.level || 'basic'}`}>
-                        {isAdvanced ? 'Nâng cao' : 'Cơ bản'}
-                      </span>
-                      {activeTerm.created_at && (
-                        <span>Ngày cập nhật: {String(activeTerm.created_at).substring(0, 10)}</span>
-                      )}
-                    </div>
                   </div>
 
                   {/* Thanh công cụ Admin */}
