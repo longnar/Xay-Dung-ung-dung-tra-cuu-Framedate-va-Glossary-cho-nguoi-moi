@@ -211,76 +211,106 @@ img {
   transform: translateY(-3px);
 }
 
-.intro,
-.welcome {
-  width: 1000px;
-  margin-left: 100px;
-  /* margin-inline: auto; */
-  text-align: center;
-  background: rgba(0, 0, 0, 0.42);
-  padding: 132px 5% 105px;
-  color: #fff;
-  font-size: clamp(26px, 2.5vw, 24px);
-  font-weight: 500;
-}
-
-.intro {
-  padding: 132px 5% 105px;
-  line-height: 1.35;
-}
-
-.welcome {
-  padding: 0 5% 100px;
-  line-height: 1.26;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.42);
-  border-radius: 0 0 30px 30px;
-}
-
-.welcome p {
-  margin: 0 0 42px;
-}
-
+/* Home lower: in-game dialogue box + character select card.
+   Stepped "pixel" corners are shared by the dialog and the card frame. */
 .home-lower {
+  --arcade: #ffd447;
+  --dialog-ink: #0c3147;
+  --pixel-corners: polygon(
+    16px 0, calc(100% - 16px) 0, calc(100% - 16px) 8px, calc(100% - 8px) 8px,
+    calc(100% - 8px) 16px, 100% 16px, 100% calc(100% - 16px), calc(100% - 8px) calc(100% - 16px),
+    calc(100% - 8px) calc(100% - 8px), calc(100% - 16px) calc(100% - 8px), calc(100% - 16px) 100%,
+    16px 100%, 16px calc(100% - 8px), 8px calc(100% - 8px), 8px calc(100% - 16px),
+    0 calc(100% - 16px), 0 16px, 8px 16px, 8px 8px, 16px 8px
+  );
+
   display: grid;
-  grid-template-columns: minmax(0, 1000px) minmax(360px, 1fr);
-  align-items: start;
-  gap: clamp(32px, 5vw, 110px);
-  margin-left: 100px;
-  padding-right: 60px;
+  grid-template-columns: minmax(0, 1fr) clamp(300px, 30vw, 440px);
+  align-items: center;
+  gap: clamp(32px, 4vw, 72px);
+  width: var(--content-width);
+  margin: 0 auto;
+  padding: clamp(56px, 7vw, 96px) 0 clamp(72px, 8vw, 120px);
 }
 
-.home-copy .intro,
-.home-copy .welcome {
-  width: 100%;
-  margin-left: 0;
+.home-dialog {
+  min-width: 0;
+  padding: 4px;
+  background: var(--white);
+  clip-path: var(--pixel-corners);
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.3));
+}
+
+.home-dialog-body {
+  position: relative;
+  padding: clamp(28px, 3.4vw, 52px) clamp(24px, 4vw, 64px) clamp(40px, 4vw, 56px);
+  color: var(--white);
+  background: linear-gradient(180deg, rgba(18, 74, 104, 0.96), rgba(12, 49, 71, 0.97));
+  clip-path: var(--pixel-corners);
+  font-size: clamp(18px, 1.45vw, 23px);
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.home-dialog-body p {
+  max-width: 62ch;
+  margin: 0 0 1.1em;
+}
+
+.home-dialog-eyebrow {
+  color: var(--arcade);
+  font: 500 clamp(18px, 1.6vw, 24px)/1 "Pixelify Sans", monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.home-dialog-eyebrow::before {
+  content: "▸ ";
+}
+
+.home-dialog-body .home-dialog-question {
+  margin-bottom: 1.4em;
+  padding-top: 1.1em;
+  border-top: 2px dashed rgba(154, 217, 245, 0.45);
+  color: #fff;
+  font-weight: 600;
+}
+
+.home-dialog-caret {
+  position: absolute;
+  right: clamp(20px, 3vw, 40px);
+  bottom: 14px;
+  color: var(--arcade);
+  font: 400 20px/1 "Pixelify Sans", monospace;
+  animation: dialog-caret 1s steps(2, jump-none) infinite;
+}
+
+@keyframes dialog-caret {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0.2; transform: translateY(4px); }
 }
 
 .character-carousel {
-  position: sticky;
-  top: 110px;
   min-width: 0;
-  padding-top: 10px;
   text-align: center;
 }
 
 .carousel-frame {
   position: relative;
-  display: grid;
-  place-items: center;
-  width: 560px;
-  min-height: 700px;
+  width: 100%;
+  aspect-ratio: 3 / 4;
   margin: 0 auto;
-  overflow: hidden;
-  border: 4px solid rgba(255, 255, 255, 0.78);
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.829);
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+  background: var(--white);
+  clip-path: var(--pixel-corners);
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.3));
 }
 
 .carousel-track {
   position: absolute;
-  inset: 0;
+  inset: 4px;
   overflow: hidden;
+  background: var(--dialog-ink);
+  clip-path: var(--pixel-corners);
 }
 
 .carousel-card {
@@ -289,8 +319,9 @@ img {
   top: 0;
   left: 0;
   width: 100%;
-  height: 730px;
+  height: 100%;
   object-fit: cover;
+  object-position: center top;
 }
 
 .carousel-track.is-sliding .carousel-card {
@@ -317,42 +348,141 @@ img {
   transform: translateX(0);
 }
 
+.carousel-nameplate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
 .carousel-caption {
-  margin: 14px 0 0;
+  margin: 0;
   color: #fff;
   font: 500 30px/1 "Pixelify Sans", monospace;
   text-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
 }
 
-.directory {
+.carousel-pips {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: clamp(40px, 13vw, 254px);
-  width: var(--content-width);
-  margin: 0 auto;
-  padding: 15px 0 120px;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.carousel-pips li {
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.carousel-pips li.is-active {
+  background: var(--arcade);
+  transform: translateY(-2px);
+}
+
+/* Dialogue choices: the two ways into the wiki. */
+.directory {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 1.6vw, 24px);
 }
 
 .directory-card {
+  position: relative;
   display: grid;
-  place-items: center;
-  width: min(400px, 42%);
-  min-height: 125px;
-  padding: 20px;
+  gap: 6px;
+  justify-items: start;
+  padding: 16px 20px 16px 44px;
   color: #fff;
-  background: #000;
-  border: 5px solid #fff;
-  border-radius: 25px;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  font: 400 clamp(36px, 3.3vw, 64px)/1 "Pixelify Sans", monospace;
-  text-decoration: none;
-  transition: transform 0.2s ease, background 0.2s ease;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.35);
+  border: 3px solid var(--white);
+  border-radius: 0;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.directory-card::before {
+  content: "▶";
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  color: var(--arcade);
+  font: 400 18px/1 "Pixelify Sans", monospace;
+  opacity: 0.35;
+  transform: translateY(-50%);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.directory-label {
+  font: 500 clamp(28px, 2.4vw, 40px)/1 "Pixelify Sans", monospace;
+}
+
+.directory-hint {
+  color: var(--sky-tint);
+  font-size: 15px;
+  line-height: 1.3;
 }
 
 .directory-card:hover,
 .directory-card:focus-visible {
-  background: #123d54;
-  transform: translateY(-5px);
+  color: var(--dialog-ink);
+  background: var(--cyan);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+  transform: translateY(3px);
+}
+
+.directory-card:hover .directory-hint,
+.directory-card:focus-visible .directory-hint {
+  color: var(--dialog-ink);
+}
+
+.directory-card:hover::before,
+.directory-card:focus-visible::before {
+  color: var(--dialog-ink);
+  opacity: 1;
+  transform: translate(4px, -50%);
+}
+
+.directory-card:focus-visible {
+  outline: 3px solid var(--arcade);
+  outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+  .home-lower {
+    grid-template-columns: 1fr;
+  }
+
+  .character-carousel {
+    width: min(100%, 360px);
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .directory {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-dialog-caret {
+    animation: none;
+  }
+
+  .carousel-track.is-sliding .carousel-card,
+  .directory-card,
+  .directory-card::before,
+  .carousel-pips li {
+    transition: none;
+  }
 }
 
 footer {
@@ -1341,48 +1471,8 @@ footer {
     font-size: 24px;
   }
 
-  .intro,
-  .welcome {
-    width: min(100%, calc(100% - 24px));
-  }
-
   .home-lower {
-    display: block;
-    margin-left: 0;
-    padding-right: 0;
-  }
-
-  .home-copy .intro,
-  .home-copy .welcome {
-    width: min(100%, calc(100% - 24px));
-    margin-left: 12px;
-  }
-
-  .character-carousel {
-    position: relative;
-    top: auto;
-    /* padding: 28px 12px 0; */
-    height: auto;
-  }
-
-  .carousel-frame {
-    min-height: 0;
-    width: min(100%, 420px);
-  }
-
-  .carousel-card {
-    height: auto;
-    aspect-ratio: 0.72;
-  }
-
-  .directory {
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 80px;
-  }
-
-  .directory-card {
-    width: min(414px, 100%);
+    width: calc(100% - 32px);
   }
 
   .contacts-screen {

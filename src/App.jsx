@@ -357,25 +357,36 @@ function App() {
       </section>
 
         <section className="home-lower">
-          <div className="home-copy">
-            <section className="intro" id="about">
+          <div className="home-dialog" id="about">
+            <div className="home-dialog-body">
+              <p className="home-dialog-eyebrow">Dành cho người mới</p>
               <p>
                 Được phát triển bởi Besto Games - 1 đội ngũ indie, với niềm đam mê game đối kháng
                 và Idol của mình họ đã dành trọn 2 năm để phát triển tựa game Idol Showdown này.
               </p>
-            </section>
-
-            <section className="welcome">
               <p>
                 Đây là một tựa game đối kháng (Fighting Game) sở hữu lối chơi vô cùng mượt mà, nhưng
                 lại cực kỳ thân thiện và dễ dàng tiếp cận ngay cả khi bạn là người mới bắt đầu bước
                 chân vào thể loại này.
               </p>
-              <p>
+              <p className="home-dialog-question">
                 Để bắt đầu trải nghiệm, bạn muốn khám phá danh sách Nhân vật trước hay tìm hiểu về các
                 Định nghĩa/Thuật ngữ trong game trước?
               </p>
-            </section>
+
+              <nav className="directory" aria-label="Khám phá nội dung">
+                <button type="button" className="directory-card" onClick={() => setActivePage('selection')}>
+                  <span className="directory-label">Character</span>
+                  <span className="directory-hint">Frame data từng đòn đánh</span>
+                </button>
+                <button type="button" className="directory-card" onClick={() => setActivePage('glossary')}>
+                  <span className="directory-label">Glossary</span>
+                  <span className="directory-hint">Thuật ngữ Basic &amp; Advanced</span>
+                </button>
+              </nav>
+
+              <span className="home-dialog-caret" aria-hidden="true">▼</span>
+            </div>
           </div>
 
           <aside className="character-carousel" aria-label="Thẻ nhân vật">
@@ -398,17 +409,17 @@ function App() {
                 )}
               </div>
             </div>
-            <p className="carousel-caption">{characterCards.length > 0 ? characterCards[activeCard].name : 'Loading...'}</p>
+            <div className="carousel-nameplate">
+              <p className="carousel-caption">{characterCards.length > 0 ? characterCards[activeCard].name : 'Loading...'}</p>
+              {characterCards.length > 0 && (
+                <ol className="carousel-pips" aria-label={`Nhân vật ${activeCard + 1} / ${characterCards.length}`}>
+                  {characterCards.map((card, index) => (
+                    <li key={card.name} className={index === activeCard ? 'is-active' : ''} />
+                  ))}
+                </ol>
+              )}
+            </div>
           </aside>
-        </section>
-
-        <section className="directory" aria-label="Khám phá nội dung">
-          <button type="button" className="directory-card" onClick={() => setActivePage('selection')}>
-            Character
-          </button>
-          <button type="button" className="directory-card" onClick={() => setActivePage('glossary')}>
-            Glossary
-          </button>
         </section>
       </main>
 
