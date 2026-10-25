@@ -13,6 +13,10 @@ import GlossaryBasicScreen from './components/glossary/GlossaryBasicScreen'
 import GlossaryAdvancedScreen from './components/glossary/GlossaryAdvancedScreen'
 import CharacterSelectGrid from './components/character/CharacterSelectGrid'
 import NewsScreen from './components/news/NewsScreen'
+import Footer from './components/Footer'
+import HeaderSearchBar from './components/HeaderSearchBar'
+import { INITIAL_GLOSSARY_TERMS } from './data/glossaryData'
+import { INITIAL_NEWS_PATCHES } from './data/newsData'
 import './components/character/CharacterStyles.css'
 import './App.css'
 
@@ -38,6 +42,8 @@ function App() {
   })
   const [dbCharacters, setDbCharacters] = useState([])
   const [selectedCharacter, setSelectedCharacter] = useState(null)
+  const [searchGlossaries, setSearchGlossaries] = useState(INITIAL_GLOSSARY_TERMS)
+  const [searchNews, setSearchNews] = useState(INITIAL_NEWS_PATCHES)
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -323,42 +329,40 @@ function App() {
   }, [])
 
   const loadCharacters = async () => {
-    setIsDataLoading(true)
     try {
       const list = await api.getCharacters()
-      setDbCharacters(list)
-      if (list.length > 0) {
+      if (Array.isArray(list) && list.length > 0) {
+        setDbCharacters(list)
         setSelectedCharacter((prev) => prev ? list.find(c => c.id === prev.id) || list[0] : list[0])
       }
     } catch (error) {
       console.error('Unable to load characters.', error)
-    } finally {
-      setIsDataLoading(false)
     }
   }
+
+  // Tải dữ liệu tổng hợp cho thanh Quick Search khi khởi động
+  useEffect(() => {
+    loadCharacters()
+    api.getGlossaries()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSearchGlossaries(data)
+        }
+      })
+      .catch((err) => console.warn('Using fallback glossaries for search.', err))
+
+    api.getNews()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSearchNews(data)
+        }
+      })
+      .catch((err) => console.warn('Using fallback news for search.', err))
+  }, [])
 
   useEffect(() => {
     if (activePage === 'selection' || activePage === 'selection-add') {
       loadCharacters()
-    }
-  }, [activePage])
-
-  const loadGlossaries = async () => {
-    setIsDataLoading(true)
-    setDataError('')
-    try {
-      setGlossaries(await api.getGlossaries())
-    } catch (error) {
-      console.error('Unable to load glossaries.', error)
-      setDataError(error.message)
-    } finally {
-      setIsDataLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    if (activePage === 'glossary' || activePage.startsWith('glossary-')) {
-      loadGlossaries()
     }
   }, [activePage])
 
@@ -375,6 +379,21 @@ function App() {
           <button type="button" className="nav-link" onClick={() => setActivePage('contacts')}>
             Contacts
           </button>
+          <HeaderSearchBar
+            characters={dbCharacters}
+            glossaries={searchGlossaries}
+            news={searchNews}
+            onSelectCharacter={(char) => {
+              setSelectedCharacter(char)
+              setActivePage('selection')
+            }}
+            onSelectGlossary={(item) => {
+              setActivePage(item.level === 'advanced' ? 'glossary-advanced' : 'glossary-basic')
+            }}
+            onSelectNews={() => {
+              setActivePage('news')
+            }}
+          />
           <button type="button" className="login-trigger" onClick={isAuthenticated ? handleLogout : () => setIsLoginOpen(true)}>
             {isAuthenticated ? 'Logout' : 'Login'}
           </button>
@@ -462,7 +481,7 @@ function App() {
         </section>
       </main>
 
-      <footer id="footer" />
+      <Footer onNavigate={(page) => setActivePage(page)} />
     </>
   )
 
