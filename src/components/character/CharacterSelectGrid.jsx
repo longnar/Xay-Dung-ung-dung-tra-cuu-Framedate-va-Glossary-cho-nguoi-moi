@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { characterApi } from '../../api/character.api';
 import brandIcon from '../../assets/branding/IdolShowdownIcon.png';
 import selectionFrame from '../../assets/decorative/selection-frame.svg';
