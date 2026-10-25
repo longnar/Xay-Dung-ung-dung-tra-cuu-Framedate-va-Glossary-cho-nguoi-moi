@@ -23,8 +23,8 @@
     "test:cov": "jest --coverage"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "LonGnar",
+  "license": "MIT",
   "type": "commonjs",
   "engines": {
     "node": "20.x"

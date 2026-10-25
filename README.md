@@ -127,3 +127,9 @@ Hệ thống đang xây dựng là một wiki game/kho dữ liệu nhân vật v
 - `database/schema/001_initial_schema.sql` → Cấu trúc CSDL ban đầu
 
 Đây là hai file nền tảng quan trọng để hiểu cấu trúc dữ liệu và kết nối hệ thống.
+
+## License & Disclaimer
+
+- Dự án được phát hành dưới giấy phép [MIT License](LICENSE).
+- **Disclaimer:** *Idol Showdown* thuộc quyền sở hữu của **Besto Games**. Hình ảnh và thông tin nhân vật thuộc bản quyền của **COVER Corporation** / **hololive production**. Đây là dự án wiki cộng đồng phi thương mại phục vụ mục đích tra cứu và học tập.
+
