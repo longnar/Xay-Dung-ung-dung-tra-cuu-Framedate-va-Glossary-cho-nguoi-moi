@@ -3,7 +3,7 @@ import { characterApi } from '../../api/character.api';
 import brandIcon from '../../assets/branding/IdolShowdownIcon.png';
 import selectionFrame from '../../assets/decorative/selection-frame.svg';
 import selectionPolygon from '../../assets/decorative/selection-polygon.svg';
-import { getCharacterArt, getCharacterTpArt } from '../../utils/characterAssets';
+import { getCharacterArt, getCharacterTpArt, preloadCharacterAssets } from '../../utils/characterAssets';
 import { CHARACTER_SELECT_BUTTONS, FIGMA_BUTTON_CLUSTER } from '../../utils/characterButtons';
 import CharacterDetailView from './CharacterDetailView';
 
@@ -138,6 +138,10 @@ export default function CharacterSelectGrid({
       setCharList(characters);
     }
   }, [characters]);
+
+  useEffect(() => {
+    preloadCharacterAssets();
+  }, []);
 
   // Ánh xạ key nút bấm với ID chuẩn trong Database
   const KEY_TO_ID_MAP = {
@@ -424,7 +428,13 @@ export default function CharacterSelectGrid({
             {/* Khung giữa: Tranh vẽ nhân vật kích thước lớn (Figma Node 122:13) */}
             <div className="figma-showcase-art-panel">
               {currentArt ? (
-                <img src={currentArt} alt={currentChar?.name} className="figma-showcase-big-art" />
+                <img
+                  src={currentArt}
+                  alt={currentChar?.name}
+                  className="figma-showcase-big-art"
+                  loading="eager"
+                  decoding="async"
+                />
               ) : (
                 <div className="figma-showcase-art-placeholder">{currentChar?.name}</div>
               )}
