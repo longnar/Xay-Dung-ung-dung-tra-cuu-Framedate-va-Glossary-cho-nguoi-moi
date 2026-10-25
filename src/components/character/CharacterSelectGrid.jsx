@@ -269,6 +269,14 @@ export default function CharacterSelectGrid({
         character={currentChar}
         isAuthenticated={isAuthenticated}
         onBack={() => setViewMode('showcase')}
+        onCharacterUpdated={(updatedChar) => {
+          if (updatedChar) {
+            setActiveChar(updatedChar);
+            setCharList((prev) => prev.map((c) => (c.id === updatedChar.id ? updatedChar : c)));
+            if (onSelectCharacter) onSelectCharacter(updatedChar);
+          }
+          if (onCharacterUpdated) onCharacterUpdated();
+        }}
       />
     );
   }
