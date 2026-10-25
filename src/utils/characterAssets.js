@@ -103,25 +103,46 @@ export const characterTpArtMap = {
   'Hoshimachi Suisei': suiseiTp,
 };
 
-export function getCharacterArt(name) {
+function matchAsset(name, assetMap) {
   if (!name) return null;
-  for (const [key, val] of Object.entries(characterArtMap)) {
-    if (name.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(name.toLowerCase())) {
+  const lowerName = name.trim().toLowerCase();
+
+  // 1. Khớp chính xác tuyệt đối theo key (case-insensitive)
+  for (const [key, val] of Object.entries(assetMap)) {
+    if (key.toLowerCase() === lowerName) {
       return val;
     }
   }
+
+  // 2. Tách từ hoàn chỉnh để tránh 'Aki' khớp nhầm trong 'Nakiri'
+  // (ví dụ: 'Nakiri Ayame' có các từ ['nakiri', 'ayame'])
+  const nameWords = lowerName.split(/[\s'()_-]+/).filter(Boolean);
+  for (const [key, val] of Object.entries(assetMap)) {
+    const keyLower = key.toLowerCase();
+    if (nameWords.includes(keyLower)) {
+      return val;
+    }
+  }
+
+  // 3. Khớp kiểm tra chuỗi con chứa key hoàn chỉnh (ưu tiên key dài trước)
+  const sortedEntries = Object.entries(assetMap).sort((a, b) => b[0].length - a[0].length);
+  for (const [key, val] of sortedEntries) {
+    const keyLower = key.toLowerCase();
+    if (lowerName.includes(keyLower) || keyLower.includes(lowerName)) {
+      return val;
+    }
+  }
+
   return null;
+}
+
+export function getCharacterArt(name) {
+  return matchAsset(name, characterArtMap);
 }
 
 // Lay hinh nhan vat trong suot Promo Art TP
 export function getCharacterTpArt(name) {
-  if (!name) return null;
-  for (const [key, val] of Object.entries(characterTpArtMap)) {
-    if (name.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(name.toLowerCase())) {
-      return val;
-    }
-  }
-  return null;
+  return matchAsset(name, characterTpArtMap);
 }
 
 export const characterCutoutMap = {
@@ -156,12 +177,6 @@ export const characterCutoutMap = {
 
 // Lay hinh nhan vat cat canh Cutout PNG
 export function getCharacterCutout(name) {
-  if (!name) return null;
-  for (const [key, val] of Object.entries(characterCutoutMap)) {
-    if (name.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(name.toLowerCase())) {
-      return val;
-    }
-  }
-  return null;
+  return matchAsset(name, characterCutoutMap);
 }
 
