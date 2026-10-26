@@ -1,5 +1,6 @@
 .main-footer {
-  margin-top: 60px;
+  margin-top: auto;
+  padding-top: 20px;
   background: rgba(10, 16, 26, 0.95);
   border-top: 2px solid #000000;
   color: #cfd8dc;
