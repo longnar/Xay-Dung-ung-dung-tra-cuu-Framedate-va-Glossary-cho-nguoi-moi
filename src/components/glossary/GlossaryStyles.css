@@ -1,0 +1,612 @@
+/* =========================================================
+   FIGMA GLOSSARY SCREEN (BASIC & ADVANCED - NEWS STYLE)
+   ========================================================= */
+
+.figma-glossary-screen {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: url("../../assets/Next-Fes-SkyTemplate.png") center / cover no-repeat fixed;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  box-sizing: border-box;
+  isolation: isolate;
+  font-family: inherit;
+}
+
+/* Nút Back ở góc trên bên trái */
+.figma-glossary-back-btn {
+  position: absolute;
+  top: 36px;
+  left: 40px;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+.figma-glossary-back-btn:hover {
+  background: rgba(56, 189, 248, 0.35);
+  border-color: #38bdf8;
+  transform: translateX(-4px);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+}
+
+/* Khung nền kính mờ tổng thể (Tương tự NewsContainer) */
+.figma-glossary-container {
+  position: relative;
+  width: min(1455px, 94vw);
+  height: min(830px, 86vh);
+  min-height: min(650px, 80vh);
+  background: rgba(0, 0, 0, 0.54);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55), inset 0 0 25px rgba(255, 255, 255, 0.05);
+  display: flex;
+  padding: 24px;
+  box-sizing: border-box;
+  gap: 24px;
+  z-index: 10;
+}
+
+/* =========================================================
+   CỘT TRÁI: SIDEBAR DANH SÁCH THUẬT NGỮ
+   ========================================================= */
+
+.figma-glossary-sidebar {
+  width: clamp(320px, 32%, 460px);
+  height: 100%;
+  background: rgba(0, 0, 0, 0.42);
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 18px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.figma-glossary-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.figma-glossary-sidebar-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #7dd3fc;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Nút thêm thuật ngữ dành cho Admin */
+.figma-glossary-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 12px;
+  background: rgba(56, 189, 248, 0.25);
+  border: 1px solid #38bdf8;
+  color: #e0f2fe;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.figma-glossary-add-btn:hover {
+  background: #0284c7;
+  border-color: #7dd3fc;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+}
+
+/* Nút chuyển đổi nhanh giữa 2 trang Basic và Advanced */
+.figma-glossary-switch-page-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px dashed rgba(56, 189, 248, 0.4);
+  border-radius: 12px;
+  color: #93c5fd;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.figma-glossary-switch-page-btn:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Thanh tìm kiếm */
+.figma-glossary-search-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.figma-glossary-search-input {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.figma-glossary-search-input:focus {
+  border-color: #38bdf8;
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+}
+
+.figma-glossary-search-input::placeholder {
+  color: #64748b;
+}
+
+/* Danh sách thuật ngữ cuộn dọc */
+.figma-glossary-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+.figma-glossary-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.figma-glossary-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+}
+
+.figma-glossary-item {
+  width: 100%;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #e2e8f0;
+}
+
+.figma-glossary-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateX(3px);
+}
+
+.figma-glossary-item.active {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.25);
+}
+
+.figma-glossary-item-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.figma-glossary-item.active .figma-glossary-item-title {
+  color: #38bdf8;
+}
+
+.figma-glossary-item-preview {
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* =========================================================
+   CỘT PHẢI: CHI TIẾT NỘI DUNG HOẶC FORM SOẠN THẢO
+   ========================================================= */
+
+.figma-glossary-content-panel {
+  flex: 1;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.42);
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 24px 28px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  gap: 18px;
+}
+
+.figma-glossary-content-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.figma-glossary-content-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+}
+
+/* Header bài viết */
+.figma-glossary-article-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.figma-glossary-article-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.figma-glossary-article-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.figma-glossary-article-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.figma-glossary-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.figma-glossary-badge.basic {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.figma-glossary-badge.advanced {
+  background: rgba(236, 72, 153, 0.2);
+  color: #f472b6;
+  border: 1px solid rgba(236, 72, 153, 0.35);
+}
+
+/* Nút Admin Thao tác (Sửa, Xóa) */
+.figma-glossary-admin-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.figma-glossary-btn-edit,
+.figma-glossary-btn-delete {
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.figma-glossary-btn-edit {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.figma-glossary-btn-edit:hover {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  transform: translateY(-2px);
+}
+
+.figma-glossary-btn-delete {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.figma-glossary-btn-delete:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: #ef4444;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Nội dung chi tiết thuật ngữ */
+.figma-glossary-body-scroll {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.figma-glossary-body-text {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  margin: 0;
+}
+
+/* Video & Hình ảnh minh họa */
+.figma-glossary-media-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.figma-glossary-media-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #38bdf8;
+  margin: 0;
+}
+
+.figma-glossary-video-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #38bdf8;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.figma-glossary-video-link:hover {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+
+.figma-glossary-media-img {
+  max-width: 100%;
+  max-height: 380px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* =========================================================
+   FORM SOẠN THẢO ADMIN (THÊM / SỬA)
+   ========================================================= */
+
+.figma-glossary-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+.figma-glossary-form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+
+.figma-glossary-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.figma-glossary-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.figma-glossary-input,
+.figma-glossary-select {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.figma-glossary-input:focus,
+.figma-glossary-select:focus {
+  border-color: #38bdf8;
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+}
+
+.figma-glossary-textarea {
+  flex: 1;
+  min-height: 200px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.6;
+  outline: none;
+  resize: vertical;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.figma-glossary-textarea:focus {
+  border-color: #38bdf8;
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+}
+
+.figma-glossary-file-input {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.figma-glossary-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.figma-glossary-btn-cancel {
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #cbd5e1;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.figma-glossary-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.figma-glossary-btn-save {
+  padding: 10px 24px;
+  border-radius: 12px;
+  background: #0284c7;
+  border: 1px solid #38bdf8;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+}
+
+.figma-glossary-btn-save:hover {
+  background: #0369a1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .figma-glossary-screen {
+    padding: 16px 12px;
+    justify-content: flex-start;
+  }
+
+  .figma-glossary-back-btn {
+    position: relative;
+    top: auto;
+    left: auto;
+    align-self: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .figma-glossary-container {
+    flex-direction: column;
+    height: auto;
+    min-height: auto;
+    padding: 18px 16px;
+    border-radius: 20px;
+  }
+
+  .figma-glossary-sidebar {
+    width: 100%;
+    max-height: 360px;
+  }
+
+  .figma-glossary-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-height: 800px) {
+  .figma-glossary-screen {
+    justify-content: flex-start;
+    padding-top: 16px;
+    padding-bottom: 24px;
+    overflow-y: auto;
+  }
+
+  .figma-glossary-container {
+    height: auto;
+    min-height: calc(100vh - 40px);
+  }
+}
+

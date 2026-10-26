@@ -19,11 +19,11 @@ export declare class CharacterController {
     deleteCharacter(id: number): Promise<{
         message: string;
     }>;
-    createCharacterMove(id: number, dto: CreateMoveDto): Promise<{
+    createCharacterMove(id: number, dto: CreateMoveDto, file?: Express.Multer.File): Promise<{
         message: string;
         move: import("../../entities/character-move.entity").CharacterMove;
     }>;
-    updateCharacterMove(id: number, moveId: number, dto: Partial<CreateMoveDto>): Promise<{
+    updateCharacterMove(id: number, moveId: number, dto: Partial<CreateMoveDto>, file?: Express.Multer.File): Promise<{
         message: string;
         move: import("../../entities/character-move.entity").CharacterMove;
     }>;

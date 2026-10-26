@@ -65,6 +65,17 @@ const multerOptions = {
             cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
         },
     }),
+    limits: {
+        fileSize: 25 * 1024 * 1024,
+    },
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        }
+        else {
+            cb(new Error('Chỉ chấp nhận tệp định dạng hình ảnh (.png, .jpg, .webp, .svg, .gif).'), false);
+        }
+    },
 };
 let CharacterController = class CharacterController {
     constructor(characterService) {
@@ -91,11 +102,11 @@ let CharacterController = class CharacterController {
     deleteCharacter(id) {
         return this.characterService.deleteCharacter(id);
     }
-    createCharacterMove(id, dto) {
-        return this.characterService.createCharacterMove(id, dto);
+    createCharacterMove(id, dto, file) {
+        return this.characterService.createCharacterMove(id, dto, file);
     }
-    updateCharacterMove(id, moveId, dto) {
-        return this.characterService.updateCharacterMove(moveId, id, dto);
+    updateCharacterMove(id, moveId, dto, file) {
+        return this.characterService.updateCharacterMove(moveId, id, dto, file);
     }
     deleteCharacterMove(id, moveId) {
         return this.characterService.deleteCharacterMove(moveId, id);
@@ -180,25 +191,31 @@ __decorate([
     (0, common_1.Post)('admin/characters/:id/moves'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, jwt_auth_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)('admin'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('hitbox', multerOptions)),
     (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiConsumes)('multipart/form-data', 'application/json'),
     (0, swagger_1.ApiOperation)({ summary: 'Thêm đòn đánh cho nhân vật (Admin)' }),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, create_move_dto_1.CreateMoveDto]),
+    __metadata("design:paramtypes", [Number, create_move_dto_1.CreateMoveDto, Object]),
     __metadata("design:returntype", void 0)
 ], CharacterController.prototype, "createCharacterMove", null);
 __decorate([
     (0, common_1.Put)('admin/characters/:id/moves/:moveId'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, jwt_auth_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)('admin'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('hitbox', multerOptions)),
     (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiConsumes)('multipart/form-data', 'application/json'),
     (0, swagger_1.ApiOperation)({ summary: 'Cập nhật đòn đánh của nhân vật (Admin)' }),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Param)('moveId', common_1.ParseIntPipe)),
     __param(2, (0, common_1.Body)()),
+    __param(3, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number, Object]),
+    __metadata("design:paramtypes", [Number, Number, Object, Object]),
     __metadata("design:returntype", void 0)
 ], CharacterController.prototype, "updateCharacterMove", null);
 __decorate([

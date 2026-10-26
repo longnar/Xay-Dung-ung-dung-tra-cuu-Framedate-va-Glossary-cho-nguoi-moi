@@ -9,8 +9,15 @@ import selectionFrame from './assets/decorative/selection-frame.svg'
 import selectionPolygon from './assets/decorative/selection-polygon.svg'
 import { decodeBase64Image } from './utils/decodeImage'
 import { api } from './api/client'
-import GlossaryEditor from './components/glossary/GlossaryEditor'
-import GlossaryEntries from './components/glossary/GlossaryEntries'
+import GlossaryBasicScreen from './components/glossary/GlossaryBasicScreen'
+import GlossaryAdvancedScreen from './components/glossary/GlossaryAdvancedScreen'
+import CharacterSelectGrid from './components/character/CharacterSelectGrid'
+import NewsScreen from './components/news/NewsScreen'
+import Footer from './components/Footer'
+import HeaderSearchBar from './components/HeaderSearchBar'
+import { INITIAL_GLOSSARY_TERMS } from './data/glossaryData'
+import { INITIAL_NEWS_PATCHES } from './data/newsData'
+import './components/character/CharacterStyles.css'
 import './App.css'
 
 function App() {
@@ -30,15 +37,13 @@ function App() {
   const [characterCards, setCharacterCards] = useState([])
   const [cardUrls, setCardUrls] = useState({})
   const cardUrlsRef = useRef({})
-  const [glossaries, setGlossaries] = useState([])
-  const [dataError, setDataError] = useState('')
-  const [isDataLoading, setIsDataLoading] = useState(false)
-  const [glossaryForm, setGlossaryForm] = useState({
-    id: null, term: '', definition: '', level: 'basic', video_url: '', image: null
-  })
   const [characterForm, setCharacterForm] = useState({
     name: '', debut_date: '', description: '', difficulty: 1, type: '', image: null
   })
+  const [dbCharacters, setDbCharacters] = useState([])
+  const [selectedCharacter, setSelectedCharacter] = useState(null)
+  const [searchGlossaries, setSearchGlossaries] = useState(INITIAL_GLOSSARY_TERMS)
+  const [searchNews, setSearchNews] = useState(INITIAL_NEWS_PATCHES)
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -187,6 +192,8 @@ function App() {
     try {
       await api.createCharacter(form)
       setCharacterForm({ name: '', debut_date: '', description: '', difficulty: 1, type: '', image: null })
+      setMainCharacterImagePreview('')
+      await loadCharacters()
       setActivePage('selection')
     } catch (error) {
       console.error('Unable to create character.', error)
@@ -321,22 +328,41 @@ function App() {
     return () => window.removeEventListener('auth-expired', handleAuthExpired)
   }, [])
 
-  const loadGlossaries = async () => {
-    setIsDataLoading(true)
-    setDataError('')
+  const loadCharacters = async () => {
     try {
-      setGlossaries(await api.getGlossaries())
+      const list = await api.getCharacters()
+      if (Array.isArray(list) && list.length > 0) {
+        setDbCharacters(list)
+        setSelectedCharacter((prev) => prev ? list.find(c => c.id === prev.id) || list[0] : list[0])
+      }
     } catch (error) {
-      console.error('Unable to load glossaries.', error)
-      setDataError(error.message)
-    } finally {
-      setIsDataLoading(false)
+      console.error('Unable to load characters.', error)
     }
   }
 
+  // Tải dữ liệu tổng hợp cho thanh Quick Search khi khởi động
   useEffect(() => {
-    if (activePage === 'glossary' || activePage.startsWith('glossary-')) {
-      loadGlossaries()
+    loadCharacters()
+    api.getGlossaries()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSearchGlossaries(data)
+        }
+      })
+      .catch((err) => console.warn('Using fallback glossaries for search.', err))
+
+    api.getNews()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSearchNews(data)
+        }
+      })
+      .catch((err) => console.warn('Using fallback news for search.', err))
+  }, [])
+
+  useEffect(() => {
+    if (activePage === 'selection' || activePage === 'selection-add') {
+      loadCharacters()
     }
   }, [activePage])
 
@@ -347,12 +373,27 @@ function App() {
           <button type="button" className="nav-link" onClick={() => setActivePage('home')}>
             Replay
           </button>
-          <button type="button" className="nav-link" onClick={() => setActivePage('home')}>
+          <button type="button" className="nav-link" onClick={() => setActivePage('news')}>
             News
           </button>
           <button type="button" className="nav-link" onClick={() => setActivePage('contacts')}>
             Contacts
           </button>
+          <HeaderSearchBar
+            characters={dbCharacters}
+            glossaries={searchGlossaries}
+            news={searchNews}
+            onSelectCharacter={(char) => {
+              setSelectedCharacter(char)
+              setActivePage('selection')
+            }}
+            onSelectGlossary={(item) => {
+              setActivePage(item.level === 'advanced' ? 'glossary-advanced' : 'glossary-basic')
+            }}
+            onSelectNews={() => {
+              setActivePage('news')
+            }}
+          />
           <button type="button" className="login-trigger" onClick={isAuthenticated ? handleLogout : () => setIsLoginOpen(true)}>
             {isAuthenticated ? 'Logout' : 'Login'}
           </button>
@@ -362,7 +403,7 @@ function App() {
       <main>
         <section className="hero" id="hero">
           <div className="hero-art" aria-hidden="true" style={{ backgroundImage: `url(${heroArtImage})` }} />
-          <div className="hero-overlay" aria-hidden="true" />
+          <div className="hero-overlay" aria-hidden="true"> 
           <div className="hero-content">
             <img className="game-logo" src={gameLogo} alt="Idol Showdown Next Fest" />
             <p className="game-meta">
@@ -381,7 +422,8 @@ function App() {
               Download
             </a>
           </div>
-        </section>
+        </div>
+      </section>
 
         <section className="home-lower">
           <div className="home-copy">
@@ -439,7 +481,7 @@ function App() {
         </section>
       </main>
 
-      <footer id="footer" />
+      <Footer onNavigate={(page) => setActivePage(page)} />
     </>
   )
 
@@ -487,7 +529,7 @@ function App() {
         <img src={brandIcon} alt="Quay lại" />
       </button>
 
-      <button type="button" className="glossary-panel basic" onClick={() => setActivePage(isAuthenticated ? 'glossary-basic' : 'glossary-basic-view')} aria-label="Mở phần Basic glossary">
+      <button type="button" className="glossary-panel basic" onClick={() => setActivePage('glossary-basic')} aria-label="Mở phần Basic glossary">
         <div className="panel-visual" />
         <img className="panel-character" src={pixelFubuki} alt="" />
         <div className="panel-content">
@@ -496,7 +538,7 @@ function App() {
         </div>
       </button>
 
-      <button type="button" className="glossary-panel advanced" onClick={() => setActivePage(isAuthenticated ? 'glossary-advanced' : 'glossary-advanced-view')} aria-label="Mở phần Advanced glossary">
+      <button type="button" className="glossary-panel advanced" onClick={() => setActivePage('glossary-advanced')} aria-label="Mở phần Advanced glossary">
         <div className="panel-visual" />
         <img className="panel-character" src={pixelKoyori} alt="" />
         <div className="panel-content">
@@ -504,101 +546,46 @@ function App() {
           <p>Những thứ nâng cao hơn nếu bạn muốn cải thiện trình độ hoặc muốn hiểu sâu hơn về Fighting game</p>
         </div>
       </button>
-      {dataError && <p className="data-error" role="alert">{dataError}</p>}
     </main>
   )
 
-  const renderGlossaryAdmin = (type) => {
-    const isBasic = type === 'basic'
-    const title = isBasic ? 'Basic' : 'Advanced'
-    const entries = glossaries.filter((entry) => entry.level === type)
+  const renderGlossaryBasic = () => (
+    <GlossaryBasicScreen
+      isAuthenticated={isAuthenticated}
+      onBackHome={() => setActivePage('glossary')}
+      onNavigateToAdvanced={() => setActivePage('glossary-advanced')}
+    />
+  )
 
-    return (
-      <main className={`glossary-admin-screen ${isBasic ? 'admin-basic' : 'admin-advanced'}`} aria-label={`Quản lý mục Glossary ${title}`}>
-        <button type="button" className="admin-back-button" onClick={() => setActivePage('glossary')} aria-label="Quay lại Glossary">
-          <span aria-hidden="true">←</span>
-        </button>
-
-        <section className="admin-panel" aria-label={`Thêm nội dung ${title}`}>
-          <aside className="left-panel" aria-label={`Sidebar ${title}`}>
-            <button type="button" className="add-button" onClick={() => setGlossaryForm({ id: null, term: '', definition: '', level: type, video_url: '', image: null })}>
-              <span className="plus" aria-hidden="true">+</span>
-              <span className="button-text">Thêm</span>
-            </button>
-          </aside>
-
-          <div className="right-panel" aria-label={`Khu vực chỉnh sửa ${title}`}>
-            <GlossaryEditor
-              value={glossaryForm}
-              onChange={setGlossaryForm}
-              onSubmit={handleGlossarySubmit}
-              onCancel={() => setGlossaryForm({ id: null, term: '', definition: '', level: type, video_url: '', image: null })}
-            />
-            <GlossaryEntries
-              entries={entries}
-              isLoading={isDataLoading}
-              onEdit={(entry) => setGlossaryForm({ ...entry, image: null })}
-              onDelete={handleDeleteGlossary}
-            />
-          </div>
-
-        </section>
-      </main>
-    )
-  }
-
-  const renderGlossaryView = (type) => {
-    const isBasic = type === 'basic'
-    const title = isBasic ? 'BASIC' : 'ADVANCED'
-    const description = isBasic
-      ? 'Những thứ cơ bản nhất về Fighting game mà bạn muốn biết để làm quen với mọi Fighting game.'
-      : 'Những thứ nâng cao hơn nếu bạn muốn cải thiện trình độ hoặc muốn hiểu sâu hơn về Fighting game.'
-
-    return (
-      <main className={`glossary-view-screen ${isBasic ? 'view-basic' : 'view-advanced'}`} aria-label={`Glossary ${title}`}>
-        <button type="button" className="admin-back-button" onClick={() => setActivePage('glossary')} aria-label="Quay lại Glossary">
-          <span aria-hidden="true">←</span>
-        </button>
-        <article className="glossary-view-card">
-          <h1>{title}</h1>
-          <p>{description}</p>
-          {dataError && <p role="alert">{dataError}</p>}
-          {isDataLoading && <p>Đang tải dữ liệu...</p>}
-          {!isDataLoading && glossaries.filter((entry) => entry.level === type).map((entry) => (
-            <article className="glossary-entry" key={entry.id}>
-              <h2>{entry.term}</h2>
-              <p>{entry.definition}</p>
-              {entry.video_url && <a href={entry.video_url} target="_blank" rel="noreferrer">Xem video</a>}
-            </article>
-          ))}
-          {!isDataLoading && glossaries.filter((entry) => entry.level === type).length === 0 && (
-            <p className="glossary-view-placeholder">Chưa có nội dung.</p>
-          )}
-        </article>
-      </main>
-    )
-  }
+  const renderGlossaryAdvanced = () => (
+    <GlossaryAdvancedScreen
+      isAuthenticated={isAuthenticated}
+      onBackHome={() => setActivePage('glossary')}
+      onNavigateToBasic={() => setActivePage('glossary-basic')}
+    />
+  )
 
   const renderSelection = () => (
-    <main className="selection-screen" aria-label="Chọn chế độ Idol Showdown">
-      <div className="selection-diamond" aria-hidden="true" />
+    <CharacterSelectGrid
+      characters={dbCharacters}
+      selectedCharacter={selectedCharacter || dbCharacters[0]}
+      onSelectCharacter={(char) => setSelectedCharacter(char)}
+      onCharacterUpdated={loadCharacters}
+      onAddNewCharacter={() => {
+        setCharacterForm({ name: '', debut_date: '', description: '', difficulty: 1, type: '', image: null })
+        setMainCharacterImagePreview('')
+        setActivePage('selection-add')
+      }}
+      isAuthenticated={isAuthenticated}
+      onBackHome={() => setActivePage('home')}
+    />
+  )
 
-      <button type="button" className="back-button selection-back" onClick={() => setActivePage('home')} aria-label="Quay lại trang trước">
-        <svg className="selection-icon-svg" viewBox="0 0 269 269" role="img" aria-label="Quay lại">
-          <path
-            className="selection-hitbox"
-            d="M34 132C28 89 52 52 95 31C126 16 165 16 201 31C228 43 246 56 260 75C272 92 271 111 256 124C238 139 218 154 204 166C189 178 180 191 171 198C158 208 145 209 131 204C112 197 102 180 91 180C71 180 60 194 53 209C46 224 33 232 19 226C8 220 7 205 12 189C16 171 21 155 34 132Z"
-          />
-          <image href={brandIcon} x="0" y="0" width="269" height="269" preserveAspectRatio="xMidYMid meet" />
-        </svg>
-      </button>
-
-      {isAuthenticated && (
-        <button type="button" className="add-selection" onClick={() => setActivePage('selection-add')} aria-label="Thêm lựa chọn">
-          +
-        </button>
-      )}
-    </main>
+  const renderNews = () => (
+    <NewsScreen
+      isAuthenticated={isAuthenticated}
+      onBackHome={() => setActivePage('home')}
+    />
   )
 
   const renderSelectionAdd = () => (
@@ -694,17 +681,17 @@ function App() {
       case 'glossary':
         return renderGlossary()
       case 'glossary-basic':
-        return isAuthenticated ? renderGlossaryAdmin('basic') : renderGlossaryView('basic')
-      case 'glossary-advanced':
-        return isAuthenticated ? renderGlossaryAdmin('advanced') : renderGlossaryView('advanced')
       case 'glossary-basic-view':
-        return renderGlossaryView('basic')
+        return renderGlossaryBasic()
+      case 'glossary-advanced':
       case 'glossary-advanced-view':
-        return renderGlossaryView('advanced')
+        return renderGlossaryAdvanced()
       case 'selection-add':
         return isAuthenticated ? renderSelectionAdd() : renderSelection()
       case 'selection':
         return renderSelection()
+      case 'news':
+        return renderNews()
       default:
         return renderHome()
     }

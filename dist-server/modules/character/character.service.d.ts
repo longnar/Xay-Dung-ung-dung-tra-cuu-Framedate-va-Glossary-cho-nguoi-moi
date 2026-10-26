@@ -5,11 +5,13 @@ import { CharacterBaseStat } from '../../entities/character-base-stat.entity';
 import { CreateCharacterDto } from './dto/create-character.dto';
 import { CreateMoveDto } from './dto/create-move.dto';
 import { UpsertBaseStatsDto } from './dto/create-move.dto';
+import { StorageService } from '../storage/storage.service';
 export declare class CharacterService {
     private characterRepo;
     private moveRepo;
     private baseStatRepo;
-    constructor(characterRepo: Repository<Character>, moveRepo: Repository<CharacterMove>, baseStatRepo: Repository<CharacterBaseStat>);
+    private storageService;
+    constructor(characterRepo: Repository<Character>, moveRepo: Repository<CharacterMove>, baseStatRepo: Repository<CharacterBaseStat>, storageService: StorageService);
     private deleteUploadedFile;
     getAllCharacters(): Promise<Character[]>;
     getCharacterById(id: number): Promise<Character>;
@@ -26,11 +28,11 @@ export declare class CharacterService {
     }>;
     getCharacterMoves(characterId: number): Promise<CharacterMove[]>;
     getCharacterBaseStats(characterId: number): Promise<CharacterBaseStat | null>;
-    createCharacterMove(characterId: number, dto: CreateMoveDto): Promise<{
+    createCharacterMove(characterId: number, dto: CreateMoveDto, file?: Express.Multer.File): Promise<{
         message: string;
         move: CharacterMove;
     }>;
-    updateCharacterMove(moveId: number, characterId: number, dto: Partial<CreateMoveDto>): Promise<{
+    updateCharacterMove(moveId: number, characterId: number, dto: Partial<CreateMoveDto>, file?: Express.Multer.File): Promise<{
         message: string;
         move: CharacterMove;
     }>;

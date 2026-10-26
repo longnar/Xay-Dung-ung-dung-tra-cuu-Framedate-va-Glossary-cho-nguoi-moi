@@ -76,6 +76,48 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateMoveDto.prototype, "INVULNERABILITY", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: '/uploads/hitbox-12345.png' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateMoveDto.prototype, "hitbox_url", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'Frame 6-8 Active Hitbox' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateMoveDto.prototype, "hitbox_caption", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'normal' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateMoveDto.prototype, "move_type", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'Mid' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateMoveDto.prototype, "guard", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'Chemistry / Gadget' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateMoveDto.prototype, "version", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'Special-cancellable on block' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateMoveDto.prototype, "properties", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'Core poke used in neutral.' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateMoveDto.prototype, "description", void 0);
 class UpsertBaseStatsDto {
 }
 exports.UpsertBaseStatsDto = UpsertBaseStatsDto;

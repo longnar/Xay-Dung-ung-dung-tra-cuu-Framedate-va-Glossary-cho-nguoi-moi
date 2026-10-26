@@ -38,6 +38,13 @@ CREATE TABLE IF NOT EXISTS character_moves (
     ADV_ON_BLOCK INT,
     ADV_ON_HIT INT,
     INVULNERABILITY VARCHAR(255),
+    hitbox_url VARCHAR(255),
+    hitbox_caption VARCHAR(255),
+    move_type VARCHAR(50) DEFAULT 'normal',
+    guard VARCHAR(50) DEFAULT 'Mid',
+    version VARCHAR(100),
+    properties TEXT,
+    description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_character_moves_character

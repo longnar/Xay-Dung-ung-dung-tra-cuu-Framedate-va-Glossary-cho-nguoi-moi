@@ -11,6 +11,13 @@ export declare class CharacterMove {
     ADV_ON_BLOCK: number | null;
     ADV_ON_HIT: number | null;
     INVULNERABILITY: string | null;
+    hitbox_url: string | null;
+    hitbox_caption: string | null;
+    move_type: string | null;
+    guard: string | null;
+    version: string | null;
+    properties: string | null;
+    description: string | null;
     character: Character;
     created_at: Date;
     updated_at: Date;

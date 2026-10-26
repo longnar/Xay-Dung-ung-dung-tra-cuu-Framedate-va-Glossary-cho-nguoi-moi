@@ -12,9 +12,4 @@ export class RegisterDto {
   @IsNotEmpty({ message: 'Password is required.' })
   @IsString()
   password: string;
-
-  @ApiPropertyOptional({ example: 'guest', enum: ['admin', 'guest'], description: 'Vai trò người dùng' })
-  @IsOptional()
-  @IsEnum(['admin', 'guest'])
-  role?: UserRole;
 }
