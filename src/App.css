@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500&family=Podkova:wght@500&display=swap");
 
 :root {
-  --content-width: min(1547px, calc(100% - 40px));
+  --content-width: min(1320px, calc(100% - 48px));
   --cyan: #47c2e1;
   --white: #fffbfb;
   --sky-tint: #9ad9f5;
@@ -117,7 +117,7 @@ img {
   z-index: 10;
   top: 0;
   width: 100%;
-  height: 74px;
+  height: 64px;
   background: rgba(98, 185, 234, 0.57);
   backdrop-filter: blur(3px);
 }
@@ -127,13 +127,13 @@ img {
   justify-content: flex-end;
   align-items: center;
   height: 100%;
-  padding: 0 clamp(24px, 7.1vw, 136px);
-  font: 500 32px/1 "Pixelify Sans", monospace;
+  padding: 0 clamp(20px, 5vw, 100px);
+  font: 500 24px/1 "Pixelify Sans", monospace;
 }
 
 .nav-link,
 .login-trigger {
-  padding: 0 20px;
+  padding: 0 16px;
   color: #fff;
   text-decoration: none;
   border-left: 1px solid rgba(255, 255, 255, 0.85);
@@ -160,7 +160,7 @@ img {
 
 .hero {
   position: relative;
-  min-height: clamp(540px, 62vh, 720px);
+  min-height: clamp(440px, 48vh, 560px);
   isolation: isolate;
   display: flex;
   align-items: stretch;
@@ -176,16 +176,16 @@ img {
 .hero-overlay {
   position: relative;
   z-index: 1;
-  width: min(540px, max(380px, 35vw));
+  width: min(440px, max(320px, 30vw));
   background: rgba(0, 0, 0, 0.68);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(40px, 6vh, 80px) clamp(24px, 3.5vw, 48px);
+  padding: clamp(32px, 4.5vh, 60px) clamp(20px, 2.5vw, 36px);
   box-sizing: border-box;
-  margin-left: max(0px, calc((100% - 1547px) / 2));
+  margin-left: max(0px, calc((100% - 1320px) / 2));
 }
 
 .hero-content {
@@ -199,29 +199,29 @@ img {
 
 .game-logo {
   display: block;
-  width: min(420px, 100%);
+  width: min(340px, 100%);
   height: auto;
-  margin-left: -6px;
+  margin-left: -4px;
 }
 
 .game-meta {
-  margin: 24px 0 0;
-  font: 500 clamp(18px, 1.35vw, 24px)/1.25 Podkova, serif;
+  margin: 18px 0 0;
+  font: 500 clamp(15px, 1.1vw, 20px)/1.25 Podkova, serif;
   color: #fff;
 }
 
 .download-button {
   display: inline-grid;
   place-items: center;
-  width: clamp(200px, 16vw, 240px);
-  height: clamp(54px, 4.4vw, 66px);
-  margin-top: clamp(28px, 4vh, 48px);
+  width: clamp(170px, 13vw, 210px);
+  height: clamp(46px, 3.6vw, 54px);
+  margin-top: clamp(20px, 3vh, 36px);
   margin-left: 0;
   align-self: center;
   color: #000;
   background: rgba(71, 194, 225, 0.88);
-  border-radius: 20px;
-  font: 400 clamp(22px, 1.8vw, 32px)/1 "Pixelify Sans", monospace;
+  border-radius: 16px;
+  font: 400 clamp(19px, 1.5vw, 26px)/1 "Pixelify Sans", monospace;
   text-decoration: none;
   transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 4px 16px rgba(71, 194, 225, 0.4);
@@ -236,12 +236,12 @@ img {
 
 .home-lower {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, clamp(380px, 32vw, 540px));
+  grid-template-columns: minmax(0, 1fr) minmax(280px, clamp(320px, 26vw, 420px));
   align-items: stretch;
-  gap: clamp(24px, 4vw, 80px);
+  gap: clamp(20px, 3vw, 60px);
   width: var(--content-width);
   margin: 0 auto;
-  padding: 0 clamp(16px, 3vw, 40px);
+  padding: 0 clamp(16px, 2.5vw, 36px);
   box-sizing: border-box;
 }
 
@@ -259,16 +259,16 @@ img {
   margin-left: 0;
   text-align: center;
   background: rgba(0, 0, 0, 0.42);
-  padding: clamp(36px, 4.5vw, 68px) clamp(20px, 3vw, 48px);
+  padding: clamp(28px, 3.2vw, 48px) clamp(20px, 2.5vw, 40px);
   color: #fff;
-  font-size: clamp(17px, 1.4vw, 23px);
+  font-size: clamp(15px, 1.1vw, 19px);
   font-weight: 500;
   box-sizing: border-box;
 }
 
 .intro {
-  line-height: 1.4;
-  border-radius: 24px 24px 0 0;
+  line-height: 1.45;
+  border-radius: 20px 20px 0 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
@@ -277,14 +277,14 @@ img {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  line-height: 1.35;
+  line-height: 1.4;
   border-bottom: 1px solid rgba(255, 255, 255, 0.42);
-  border-radius: 0 0 30px 30px;
-  padding-bottom: clamp(36px, 4.5vw, 68px);
+  border-radius: 0 0 24px 24px;
+  padding-bottom: clamp(28px, 3.2vw, 48px);
 }
 
 .welcome p {
-  margin: 0 0 28px;
+  margin: 0 0 22px;
 }
 
 .welcome p:last-child {
@@ -293,9 +293,9 @@ img {
 
 .character-carousel {
   position: sticky;
-  top: 100px;
+  top: 80px;
   min-width: 0;
-  padding-top: 10px;
+  padding-top: 6px;
   text-align: center;
   width: 100%;
 }
@@ -304,14 +304,14 @@ img {
   position: relative;
   display: grid;
   place-items: center;
-  width: min(540px, 100%);
+  width: min(420px, 100%);
   aspect-ratio: 540 / 690;
   margin: 0 auto;
   overflow: hidden;
   border: 4px solid rgba(255, 255, 255, 0.78);
-  border-radius: 28px;
+  border-radius: 24px;
   background: rgba(255, 255, 255, 0.83);
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
 }
 
 .carousel-track {
@@ -355,34 +355,34 @@ img {
 }
 
 .carousel-caption {
-  margin: 14px 0 0;
+  margin: 12px 0 0;
   color: #fff;
-  font: 500 clamp(20px, 2vw, 30px)/1 "Pixelify Sans", monospace;
+  font: 500 clamp(18px, 1.6vw, 24px)/1 "Pixelify Sans", monospace;
   text-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
 }
 
 .directory {
   display: flex;
   justify-content: center;
-  gap: clamp(24px, 8vw, 140px);
+  gap: clamp(24px, 6vw, 100px);
   width: var(--content-width);
   margin: 0 auto;
-  padding: 30px 20px 100px;
+  padding: 24px 20px 60px;
   box-sizing: border-box;
 }
 
 .directory-card {
   display: grid;
   place-items: center;
-  width: min(380px, 45%);
-  min-height: clamp(85px, 8vw, 125px);
-  padding: 16px 20px;
+  width: min(300px, 42%);
+  min-height: clamp(64px, 5.5vw, 84px);
+  padding: 12px 18px;
   color: #fff;
   background: #000;
-  border: 4px solid #fff;
-  border-radius: 22px;
+  border: 3px solid #fff;
+  border-radius: 18px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-  font: 400 clamp(28px, 3vw, 56px)/1 "Pixelify Sans", monospace;
+  font: 400 clamp(22px, 2.2vw, 36px)/1 "Pixelify Sans", monospace;
   text-decoration: none;
   transition: transform 0.2s ease, background 0.2s ease;
 }
@@ -390,7 +390,7 @@ img {
 .directory-card:hover,
 .directory-card:focus-visible {
   background: #123d54;
-  transform: translateY(-5px);
+  transform: translateY(-4px);
 }
 
 footer:not(.main-footer) {
